@@ -1,0 +1,19 @@
+---
+to: <%= process.cwd() %>/src/components/<%= ComponentName %>/<%= ComponentName %>.tsx
+---
+import React from 'react';
+import styles from './<%= ComponentName %>.scss';
+
+type Props = {
+
+};
+
+export const <%= ComponentName %>: React.FC<Props> = ({
+
+}) => {
+  return (
+    <div className={styles.<%= h.changeCase.camel(ComponentName) %>Wrapper}>
+      <h1><%= ComponentName %></h1>
+    </div>
+  );
+};
