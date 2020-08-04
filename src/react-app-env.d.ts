@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference types="node" />
 /// <reference types="react" />
 /// <reference types="react-dom" />
@@ -35,15 +36,15 @@ declare module '*.png' {
 }
 
 declare module '*.webp' {
-    const src: string;
-    export default src;
+  const src: string;
+  export default src;
 }
 
 declare module '*.svg' {
   import * as React from 'react';
 
   export const ReactComponent: React.FunctionComponent<React.SVGProps<
-    SVGSVGElement
+  SVGSVGElement
   > & { title?: string }>;
 
   const src: string;
