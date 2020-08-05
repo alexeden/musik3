@@ -2,9 +2,11 @@
 root: true
 extends:
   - "react-app"
+  - "plugin:react/recommended"
   - "plugin:@typescript-eslint/eslint-recommended"
   - "plugin:@typescript-eslint/recommended"
   - "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  - 'eslint-config-airbnb-base'
 
 plugins:
   - "@typescript-eslint"
@@ -23,10 +25,27 @@ parserOptions:
 rules:
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: error
+
+  react/jsx-closing-tag-location: error
+  react/jsx-tag-spacing: error
+  react/jsx-closing-bracket-location: error
+
   no-console:
     - error
     - allow:
       - error
+
+  array-bracket-spacing:
+    - error
+    - always
+
+  comma-dangle:
+    - error
+    - arrays: 'always'
+      objects: 'always'
+      imports: 'always'
+      exports: 'always'
+      functions: 'never'
 
   "@typescript-eslint/array-type":
     - error
@@ -77,7 +96,8 @@ rules:
   "@typescript-eslint/no-explicit-any": off
 
   # TS will handle this on its own
-  # "import/no-unresolved": off
+  "import/no-unresolved": off
+  "import/extensions": off
 
   # TS will yell if no prop type is provided
   "react/prop-types": off
@@ -87,7 +107,7 @@ rules:
   # TS will catch
   "consistent-return": 0
 
-  # "import/prefer-default-export": 0
+  "import/prefer-default-export": 0
 
   "@typescript-eslint/member-delimiter-style":
     - error
