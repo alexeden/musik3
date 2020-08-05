@@ -30,6 +30,14 @@ rules:
   react/jsx-tag-spacing: error
   react/jsx-closing-bracket-location: error
 
+  arrow-parens:
+    - error
+    - "as-needed"
+
+  no-param-reassign:
+    - error
+    - props: false
+
   no-console:
     - error
     - allow:
