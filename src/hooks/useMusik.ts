@@ -4,8 +4,11 @@ import {
 import { useFrame, } from 'react-three-fiber';
 import { useRefFunctions, } from './useRefFunctions';
 
-const levelsCount = 16;
+const LEVELS_COUNT = 16;
 const BEAT_MIN = 0.15; // level less than this is no beat
+const BEAT_HOLD_TIME = 40;
+const BEAT_DECAY = 0.9;
+const GAIN = 1.5;
 const msecsAvg = 633; // time between beats (msec)
 
 const useAudioAnalyzer = (() => {
@@ -27,6 +30,7 @@ const useAudioBufferSourceNode = () => {
     source: sourceRef.current,
     connect: (buffer: AudioBuffer) => {
       sourceRef.current?.disconnect();
+      sourceRef.current = context.createBufferSource();
       sourceRef.current.buffer = buffer;
       sourceRef.current.loop = true;
       sourceRef.current.connect(analyzer);
@@ -36,23 +40,30 @@ const useAudioBufferSourceNode = () => {
   };
 };
 
-const useFreqTimeData = () => {
+const useAnimationFrame = (cb: FrameRequestCallback) => {
+  useEffect(() => {
+    let stop = false;
+    const next = (t: number) => {
+      cb(t);
+      if (!stop) requestAnimationFrame(next);
+    };
+
+    next(performance.now());
+
+    return () => {
+      stop = true;
+    };
+  }, [ cb, ]);
+};
+
+export const useFreqTimeData = () => {
   const { analyzer, } = useAudioAnalyzer();
   const freq = useRef(new Uint8Array(analyzer.frequencyBinCount));
   const time = useRef(new Uint8Array(analyzer.frequencyBinCount));
 
-  useEffect(() => {
-    let stop = false;
-    const captureData = () => {
-      analyzer.getByteFrequencyData(freq.current); // <-- bar chart
-      analyzer.getByteTimeDomainData(time.current); // <-- waveform
-      if (!stop) requestAnimationFrame(captureData);
-    };
-
-    captureData();
-    return () => {
-      stop = true;
-    };
+  useAnimationFrame(() => {
+    analyzer.getByteFrequencyData(freq.current); // <-- bar chart
+    analyzer.getByteTimeDomainData(time.current); // <-- waveform
   });
 
   return {
@@ -61,11 +72,59 @@ const useFreqTimeData = () => {
   };
 };
 
+export interface LevelData {
+  levels: number[];
+  volume: number;
+}
+
+export const useLevelData = (cb: (data: LevelData) => void) => {
+  const { analyzer, } = useAudioAnalyzer();
+  const { freq, } = useFreqTimeData();
+  useAnimationFrame(() => {
+    const data: number[] = [];
+    const levelBins = Math.floor(analyzer.frequencyBinCount / LEVELS_COUNT); // #bins in each level
+
+    for (let i = 0; i < LEVELS_COUNT; i++) {
+      let levelSum = 0;
+      for (let j = 0; j < levelBins; j++) {
+        levelSum += freq[i * levelBins + j];
+      }
+      data[i] = levelSum / levelBins / 256 * GAIN; // freqData maxs at 256
+    }
+
+    // GET AVG LEVEL
+    const sum = data.slice(0, LEVELS_COUNT).reduce((s, x) => s + x, 0);
+    cb({
+      levels: data,
+      volume: sum / LEVELS_COUNT,
+    });
+  });
+};
+
+export const useBeat = (cb: (data: LevelData) => void) => {
+  const beatCutOff = useRef(0);
+  const beatTime = useRef(0);
+
+  useLevelData(({ levels, volume, }) => {
+    if (volume > beatCutOff.current && volume > BEAT_MIN) {
+      cb({ levels, volume, });
+      beatCutOff.current = volume * 1.1;
+      beatTime.current = 0;
+    }
+    else if (beatTime.current <= BEAT_HOLD_TIME) {
+      beatTime.current++;
+    }
+    else {
+      beatCutOff.current *= BEAT_DECAY;
+      beatCutOff.current = Math.max(beatCutOff.current, BEAT_MIN);
+    }
+  });
+};
+
 export const useMusik = () => {
   const useRefFunction = useRefFunctions();
   const { analyzer, context, } = useAudioAnalyzer();
   const { connect, source, } = useAudioBufferSourceNode();
-  const { freq, time, } = useFreqTimeData();
   const [ isLoading, setIsLoading, ] = useState(false);
 
   const onAudioBuffer = useCallback((buffer: AudioBuffer) => {

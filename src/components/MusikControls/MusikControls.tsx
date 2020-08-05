@@ -13,7 +13,7 @@ export const MusikControls: React.FC<Props> = props => {
   return (
     <div>
       <h1>MusikControls</h1>
-      <button onClick={() => load('/hallucinate.mp3')}>{isLoading ? '...' : 'Load'}</button>
+      <button onClick={() => load('/rabbit-hole.mp3')}>{isLoading ? '...' : 'Load'}</button>
       <button onClick={() => musik.play()}>Play</button>
       <button onClick={() => musik.pause()}>Pause</button>
     </div>
