@@ -1,46 +1,52 @@
-import React, { useMemo, useRef, } from 'react';
-import {
-  MeshBasicMaterial, Group, Color, PlaneBufferGeometry,
-} from 'three';
+import React, { useMemo, useRef, useEffect, } from 'react';
+import { Color, Group, } from 'three';
+import { useCanvas, useThree, useFrame, } from 'react-three-fiber';
 
-const BAR_COUNT = 16;
 const FILL_FACTOR = 0.8;
-const PLANE_WIDTH = 2000;
 const SEGMENTS = 10;
-const VERT_DISTANCE = 1580 / BAR_COUNT;
 
-const Level: React.FC<{ i: number }> = ({ i, }) => {
+const Level: React.FC<{ i: number; count: number }> = ({ i, count, }) => {
   const geomRef = useRef();
+  const { size, } = useThree();
+  const planeWidth = Math.sqrt(size.width ** 2 + size.height ** 2);
+
+  useEffect(() => console.log('rerendering cuz size changed!', size), [ size, ]);
+  const vertDistance = Math.max(size.height, size.width) / count;
+
+  useFrame(() => {
+  });
+
   return (
     <mesh
-      position={[ 0, VERT_DISTANCE * i - VERT_DISTANCE * BAR_COUNT / 2, 0, ]}
-      scale={[ 1, (i + 1) / BAR_COUNT * FILL_FACTOR, 1, ]}
+      position={[ 0, vertDistance * i - vertDistance * count / 2, 0, ]}
+      scale={[ 1, (i + 1) / count * FILL_FACTOR, 1, ]}
     >
       <meshBasicMaterial
         attach="material"
-        args={[ { color: new Color().setHSL(i / BAR_COUNT, 1.0, 0.5), }, ]}
+        args={[ { color: new Color().setHSL(i / count, 1.0, 0.5), }, ]}
       />
       <planeBufferGeometry
         attach="geometry"
         ref={geomRef}
-        args={[ PLANE_WIDTH, VERT_DISTANCE, SEGMENTS, SEGMENTS, ]}
+        args={[ planeWidth, vertDistance, SEGMENTS, SEGMENTS, ]}
       />
     </mesh>
   );
 };
 
-export const Levels: React.FC = () => {
-  const indices = useMemo(() => [ ...Array(BAR_COUNT).keys(), ], []);
+export const Levels: React.FC<{ count: number }> = ({ count, }) => {
+  const groupRef = useRef<Group>();
+  const indices = useMemo(() => [ ...Array(count).keys(), ], [ count, ]);
 
   return (
-    <group position={[ 0, 0, 300, ]} rotation={[ 0, 0, Math.PI / 4, ]} >
+    <group
+      ref={groupRef}
+      position={[ 0, 0, 300, ]}
+      rotation={[ 0, 0, Math.PI / 4, ]}
+    >
       {indices.map(i => (
-        <Level
-          key={i}
-          i={i}
-        />
+        <Level key={i} count={count} i={i} />
       ))}
     </group>
-
   );
 };
