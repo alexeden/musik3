@@ -6,17 +6,14 @@ type Props = {
 };
 
 export const MusikControls: React.FC<Props> = props => {
-  const musik = useMusik();
+  const { load, isLoading, } = useMusik();
 
-  useEffect(() => {
-    (async () => {
-      const buffer = await musik.load('/hallucinate.mp3');
-    })();
-  }, [ musik, ]);
+  useEffect(() => void load('/hallucinate.mp3'), []); // eslint-disable-line
 
   return (
     <div>
       <h1>MusikControls</h1>
+      <button onClick={() => load('/hallucinate.mp3')}>{isLoading ? '...' : 'Load'}</button>
     </div>
   );
 };

@@ -10,7 +10,7 @@ export const App: React.FC = () => (
     }}
     >
       <MusikCanvas />
-    <MusikControls />
     </div>
+    <MusikControls />
   </>
 );

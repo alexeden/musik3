@@ -1,29 +1,55 @@
 import { useRef, useState, } from 'react';
+import { useRefFunctions, } from './useRefFunctions';
 
-const useAudioAnalyzer = () => {
-  const context = useRef(new AudioContext());
-  const analyzer = context.current.createAnalyser();
+const useAudioAnalyzer = (() => {
+  const context = new AudioContext();
+  const analyzer = context.createAnalyser();
   analyzer.smoothingTimeConstant = 0.3; // smooths out bar chart movement over time
   analyzer.fftSize = 1024;
-  analyzer.connect(context.current.destination);
+  return () => ({
+    analyzer,
+    context,
+  });
+})();
 
-  return [ analyzer, context.current, ] as const;
+const useAudioBufferSourceNode = () => {
+  const { analyzer, context, } = useAudioAnalyzer();
+  const sourceRef = useRef<AudioBufferSourceNode | null>(null);
+
+  return {
+    source: sourceRef.current,
+    connect: (buffer: AudioBuffer) => {
+      sourceRef.current?.disconnect();
+      const source = context.createBufferSource();
+      source.connect(analyzer);
+      source.buffer = buffer;
+      source.loop = true;
+      sourceRef.current = source;
+      analyzer.connect(context.destination);
+      return source;
+    },
+  };
 };
 
 export const useMusik = () => {
-  const [ analyzer, context, ] = useAudioAnalyzer();
-
+  const useRefFunction = useRefFunctions();
+  const { analyzer, context, } = useAudioAnalyzer();
+  const { connect, } = useAudioBufferSourceNode();
   const [ isLoading, setIsLoading, ] = useState(false);
-  /**
-   * An audio asset created from an audio file using the AudioContext.decodeAudioData() method. Once
-   * in an AudioBuffer, the audio can then be played by being passed into an AudioBufferSourceNode.
-   */
 
   return {
     isLoading,
-    load: (url: string) =>
-      fetch(url)
+    load: useRefFunction('load', (url: string) => {
+      setIsLoading(true);
+
+      return fetch(url)
         .then(response => response.arrayBuffer())
-        .then(buffer => analyzer.context.decodeAudioData(buffer)),
+        .then(buffer => analyzer.context.decodeAudioData(buffer))
+        .then(audioBuffer => {
+          connect(audioBuffer);
+          return audioBuffer;
+        })
+        .finally(() => setIsLoading(false));
+    }),
   };
 };
