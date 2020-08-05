@@ -1,7 +1,8 @@
 import React from 'react';
-import { Canvas, useFrame, } from 'react-three-fiber';
+import { Canvas, } from 'react-three-fiber';
 import { Color, } from 'three';
 import GeoRing from '../GeoRing';
+import Levels from '../Levels';
 
 export const MusikCanvas: React.FC = () => (
   <Canvas
@@ -15,5 +16,6 @@ export const MusikCanvas: React.FC = () => (
   >
     <fog color={new Color(0x0)} near={2000} far={3000} />
     <GeoRing />
+    <Levels />
   </Canvas>
 );
