@@ -10,7 +10,7 @@ export const MusikCanvas: React.FC = () => (
     gl2
     onCreated={({ gl, camera, }) => {
       gl.setClearColor(0x0);
-      camera.position.setZ(1000);
+      camera.position.z = 1000; // eslint-disable-line
     }}
   >
     <fog color={new Color(0x0)} near={2000} far={3000} />
