@@ -14,7 +14,7 @@ export const MusikCanvas: React.FC = () => (
       camera.position.z = 1000;
     }}
   >
-    <fog color={new Color(0x0)} near={2000} far={3000} />
+    {/* <fog attach="fog" color={new Color(0x0)} near={2000} far={3000} /> */}
     <GeoRing />
     <Levels />
   </Canvas>

@@ -30,11 +30,24 @@ rules:
   react/jsx-closing-tag-location: error
   react/jsx-tag-spacing: error
   react/jsx-closing-bracket-location: error
+  react/jsx-wrap-multilines: error
+  react/jsx-max-props-per-line:
+    - error
+    - maximum: 1
+      when: multiline
+
+  react/jsx-first-prop-new-line: error
 
   arrow-parens:
     - error
     - "as-needed"
 
+  no-plusplus: 0
+  radix: 0
+  no-bitwise: 0
+  brace-style:
+    - error
+    - stroustrup
   no-param-reassign:
     - error
     - props: false
