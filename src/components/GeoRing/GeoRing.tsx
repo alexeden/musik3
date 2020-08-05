@@ -1,16 +1,19 @@
-import React from 'react';
+import React, { useRef, } from 'react';
+import { Mesh, } from 'three';
 import styles from './GeoRing.scss';
 
-type Props = {
-
-};
-
-export const GeoRing: React.FC<Props> = ({
-
-}) => {
+export const GeoRing: React.FC = () => {
+  const mesh = useRef<Mesh>();
   return (
-    <div className={styles.geoRingWrapper}>
-      <h1>GeoRing</h1>
-    </div>
+    <mesh ref={mesh}>
+      <meshBasicMaterial
+        color={0xFFFFFF}
+        depthWrite={false}
+        depthTest={false}
+        transparent
+        opacity={1}
+      />
+
+    </mesh>
   );
 };
