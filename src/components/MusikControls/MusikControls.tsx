@@ -10,9 +10,7 @@ export const MusikControls: React.FC<Props> = props => {
 
   useEffect(() => {
     (async () => {
-      const buffer = await musik.load('/src/assets/hallucinate.mp3');
-      console.log(buffer);
-
+      const buffer = await musik.load('/hallucinate.mp3');
     })();
   }, [ musik, ]);
 
