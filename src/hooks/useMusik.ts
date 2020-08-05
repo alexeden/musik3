@@ -32,7 +32,6 @@ const useAudioBufferSourceNode = () => {
       sourceRef.current?.disconnect();
       sourceRef.current = context.createBufferSource();
       sourceRef.current.buffer = buffer;
-      sourceRef.current.loop = true;
       sourceRef.current.connect(analyzer);
       analyzer.connect(context.destination);
       return sourceRef.current;
@@ -57,13 +56,21 @@ const useAnimationFrame = (cb: FrameRequestCallback) => {
 };
 
 export const useFreqTimeData = () => {
-  const { analyzer, } = useAudioAnalyzer();
+  const { analyzer, context, } = useAudioAnalyzer();
   const freq = useRef(new Uint8Array(analyzer.frequencyBinCount));
   const time = useRef(new Uint8Array(analyzer.frequencyBinCount));
+  context.onstatechange = () => {
+    if (context.state === 'suspended') {
+      freq.current = new Uint8Array(analyzer.frequencyBinCount);
+      time.current = new Uint8Array(analyzer.frequencyBinCount);
+    }
+  };
 
   useAnimationFrame(() => {
-    analyzer.getByteFrequencyData(freq.current); // <-- bar chart
-    analyzer.getByteTimeDomainData(time.current); // <-- waveform
+    if (context.state !== 'suspended') {
+      analyzer.getByteFrequencyData(freq.current); // <-- bar chart
+      analyzer.getByteTimeDomainData(time.current); // <-- waveform
+    }
   });
 
   return {
@@ -80,9 +87,10 @@ export interface LevelData {
 export const useLevelData = (cb: (data: LevelData) => void) => {
   const { analyzer, } = useAudioAnalyzer();
   const { freq, } = useFreqTimeData();
+  const levelBins = Math.floor(analyzer.frequencyBinCount / LEVELS_COUNT); // #bins in each level
+
   useAnimationFrame(() => {
     const data: number[] = [];
-    const levelBins = Math.floor(analyzer.frequencyBinCount / LEVELS_COUNT); // #bins in each level
 
     for (let i = 0; i < LEVELS_COUNT; i++) {
       let levelSum = 0;
@@ -102,6 +110,8 @@ export const useLevelData = (cb: (data: LevelData) => void) => {
 };
 
 export const useBeat = (cb: (data: LevelData) => void) => {
+  const { context, } = useAudioAnalyzer();
+
   const beatCutOff = useRef(0);
   const beatTime = useRef(0);
 
@@ -132,10 +142,11 @@ export const useMusik = () => {
   }, [ connect, ]);
 
   (window as any).source = source;
+  (window as any).context = context;
   return {
     isLoading,
-    play: () => source.start(),
-    pause: () => source.stop(),
+    play: () => context.resume(),
+    pause: () => context.suspend(),
     load: useRefFunction('load', (url: string) => {
       setIsLoading(true);
 
