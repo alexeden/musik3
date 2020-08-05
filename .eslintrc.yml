@@ -25,6 +25,7 @@ parserOptions:
 rules:
   react-hooks/rules-of-hooks: error
   react-hooks/exhaustive-deps: error
+  implicit-arrow-linebreak: 0
 
   react/self-closing-comp: error
   react/jsx-closing-tag-location: error

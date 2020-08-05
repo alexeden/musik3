@@ -9,12 +9,7 @@ const Level: React.FC<{ i: number; count: number }> = ({ i, count, }) => {
   const geomRef = useRef();
   const { size, } = useThree();
   const planeWidth = Math.sqrt(size.width ** 2 + size.height ** 2);
-
-  useEffect(() => console.log('rerendering cuz size changed!', size), [ size, ]);
   const vertDistance = Math.max(size.height, size.width) / count;
-
-  useFrame(() => {
-  });
 
   return (
     <mesh
