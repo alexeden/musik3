@@ -1,8 +1,17 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/interface-name-prefix */
 /* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference types="node" />
 /// <reference types="react" />
 /// <reference types="react-dom" />
 
+import { IUniform, } from 'three';
+
+declare module 'three' {
+  export interface IUniform {
+    type: string;
+  }
+}
 declare module '*.scss' {
   const styles: { readonly [className: string]: string };
 
