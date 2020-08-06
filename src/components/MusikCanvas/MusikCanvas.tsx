@@ -5,7 +5,7 @@ import Levels from '../Levels';
 
 export const MusikCanvas: React.FC = () => (
   <Canvas
-    camera={{ fov: 70, near: 100, far: 1000, }}
+    camera={{ fov: 70, near: 100, far: 2000, }}
     gl={{ antialias: false, }}
     gl2
     onCreated={({ gl, camera, }) => {
