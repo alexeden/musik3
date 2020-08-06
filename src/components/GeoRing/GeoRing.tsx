@@ -2,7 +2,7 @@ import React, { useMemo, useRef, } from 'react';
 import { Group, Mesh, MeshBasicMaterial, } from 'three';
 import { useLevelData, useBeat, } from '../../hooks/useMusik';
 
-const radiusOut = 800;
+const radiusOut = 600;
 const radiusIn = 0.6 * radiusOut;
 
 export const GeoRing: React.FC = () => {
@@ -25,7 +25,7 @@ export const GeoRing: React.FC = () => {
       shape.rotation.z += 0.01 * (i + 1);
       // Incrementally move toward the target scale
       // Increasing the denominator here will decrease the speed
-      shape.scale.addScalar((volume - shape.scale.x) / 5);
+      shape.scale.addScalar((volume - shape.scale.length()) / 3 + 0.1);
     });
   });
 
@@ -41,7 +41,7 @@ export const GeoRing: React.FC = () => {
     });
 
     // sometimes reveal one of them
-    if (Math.random() < 0.7) {
+    if (Math.random() < 0.8) {
       const r = Math.floor(Math.random() * shapes.length);
       shapes[r].rotation.y = Math.random() * Math.PI / 4 - Math.PI / 8;
     }

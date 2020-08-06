@@ -20,7 +20,7 @@ const Level: React.FC<{ i: number; count: number }> = ({ i, count, }) => {
     if (meshRef.current) {
       meshRef.current.position.y = volume * vertDistance;
       // scale bars on levels
-      meshRef.current.scale.y = levels[i] * levels[i] + 0.01;
+      meshRef.current.scale.y = levels[i];
     }
   });
 

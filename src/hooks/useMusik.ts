@@ -4,6 +4,7 @@ import {
 import { useRefFunctions, } from './useRefFunctions';
 
 const LEVELS_COUNT = 16;
+const GAIN = 1.7;
 const BEAT_MIN = 0.15; // level less than this is no beat
 const BEAT_HOLD_TIME = 40;
 const BEAT_DECAY = 0.9;
@@ -85,7 +86,8 @@ export interface LevelData {
 export const useLevelData = (cb: (data: LevelData) => void) => {
   const { analyzer, context, } = useAudioAnalyzer();
   const { freq, } = useFreqTimeData();
-  const levelBins = Math.floor(analyzer.frequencyBinCount / LEVELS_COUNT); // #bins in each level
+  /** 32 bins per level for  16 levels, 512 bins */
+  const binsPerLevel = Math.floor(analyzer.frequencyBinCount / LEVELS_COUNT);
 
   useAnimationFrame(() => {
     if (context.state === 'suspended') return;
@@ -94,10 +96,10 @@ export const useLevelData = (cb: (data: LevelData) => void) => {
 
     for (let i = 0; i < LEVELS_COUNT; i++) {
       let levelSum = 0;
-      for (let j = 0; j < levelBins; j++) {
-        levelSum += freq[i * levelBins + j];
+      for (let j = 0; j < binsPerLevel; j++) {
+        levelSum += freq[i * binsPerLevel + j];
       }
-      data[i] = levelSum / levelBins / 256; // freqData maxs at 256
+      data[i] = levelSum / binsPerLevel / 256 * GAIN; // freqData maxs at 256
     }
 
     // GET AVG LEVEL
