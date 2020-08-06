@@ -65,7 +65,7 @@ export const Effects: React.FC = () => {
     const rgbShiftPass = new ShaderPass(RgbShiftShader);
 
     renderComposer.addPass(mirrorPass);
-    renderComposer.addPass(badTvPass);
+    // renderComposer.addPass(badTvPass);
     renderComposer.addPass(filmPass);
     renderComposer.addPass(rgbShiftPass);
     renderComposer.addPass(bloomPass);
