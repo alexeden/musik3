@@ -2,6 +2,7 @@ import React from 'react';
 import { Canvas, } from 'react-three-fiber';
 import GeoRing from '../GeoRing';
 import Levels from '../Levels';
+import Effects from '../Effects';
 
 export const MusikCanvas: React.FC = () => (
   <Canvas
@@ -15,5 +16,6 @@ export const MusikCanvas: React.FC = () => (
   >
     <GeoRing />
     <Levels count={16} />
+    <Effects />
   </Canvas>
 );

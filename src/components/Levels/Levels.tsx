@@ -75,7 +75,7 @@ export const Levels: React.FC<{ count: number }> = ({ count, }) => {
   });
 
   return (
-    <group ref={groupRef} position={[ 0, 0, 300, ]}>
+    <group ref={groupRef} position-z={300}>
       {indices.map(i => (
         <Level key={i} count={count} i={i} />
       ))}

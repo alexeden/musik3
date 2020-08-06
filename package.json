@@ -10,9 +10,11 @@
     "test": "node scripts/test.js"
   },
   "dependencies": {
+    "postprocessing": "github:alexeden/postprocessing#20953c5f2941e6fef5656a8d20367f8a846447dd",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.1",
+    "react-postprocessing": "^1.1.4",
     "react-three-fiber": "^4.2.18",
     "three": "^0.119.1",
     "zustand": "^2.2.3"

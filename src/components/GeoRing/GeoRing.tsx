@@ -51,19 +51,19 @@ export const GeoRing: React.FC = () => {
     <group ref={groupRef}>
       <mesh
         material={material}
-        rotation={[ 0, Math.PI / 2, 0, ]}
+        rotation-y={Math.PI / 2}
       >
         <ringBufferGeometry attach="geometry" args={[ radiusIn, radiusOut, 3, 1, 0, Math.PI * 2, ]} />
       </mesh>
       <mesh
         material={material}
-        rotation={[ 0, Math.PI / 2, 0, ]}
+        rotation-y={Math.PI / 2}
       >
         <ringBufferGeometry attach="geometry" args={[ radiusIn, radiusOut, 4, 1, 0, Math.PI * 2, ]} />
       </mesh>
       <mesh
         material={material}
-        rotation={[ 0, Math.PI / 2, 0, ]}
+        rotation-y={Math.PI / 2}
       >
         <ringBufferGeometry attach="geometry" args={[ radiusIn, radiusOut, 6, 1, 0, Math.PI * 2, ]} />
       </mesh>

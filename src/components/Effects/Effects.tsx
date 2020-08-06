@@ -1,16 +1,43 @@
-import React from 'react';
-import styles from './Effects.scss';
+import React, { useRef, useMemo, useEffect, } from 'react';
+import { extend, useThree, useFrame, } from 'react-three-fiber';
+import { EffectComposer, RenderPass, } from 'postprocessing';
+// import { EffectComposer, } from 'react-postprocessing';
+import * as ps from 'postprocessing';
+import { wrapEffect, } from '../../lib';
 
-type Props = {
+(window as any).ps = ps;
+// const x: ps.Normal
+// extend({ EffectComposer, });
 
-};
+export const Effects: React.FC = () => {
+  const composerRef = useRef<EffectComposer>();
+  (window as any).composerRef = composerRef;
+  const {
+    scene, gl, size, camera,
+  } = useThree();
+  const composer = useMemo(() => new EffectComposer(gl), [ gl, ]);
+  const renderPass = useMemo(() => new RenderPass(scene, camera), [ scene, camera, ]);
 
-export const Effects: React.FC<Props> = ({
+  useEffect(() => composerRef.current?.setSize(size.width, size.height), [ size, ]);
+  useFrame((state, delta) => composerRef.current?.render(delta), 2);
 
-}) => {
   return (
-    <div className={styles.effectsWrapper}>
-      <h1>Effects</h1>
-    </div>
+    <primitive
+      ref={composerRef}
+      object={composer}
+      dispose={null}
+    >
+      <primitive
+        attachArray="passes"
+        object={renderPass}
+        dispose={null}
+        renderToScreen
+      />
+      {/* <renderPass scene={scene} camera={camera} /> */}
+
+    </primitive>
+    // <EffectComposer>
+
+  // </EffectComposer>
   );
 };
