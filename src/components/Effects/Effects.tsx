@@ -9,9 +9,6 @@ import {
   MirrorShader, RgbShiftShader, VerticalBlurShader,
 } from '../../lib';
 
-const E3 = Math.E ** 3;
-const EXPO = (value: number) => E3 ** (value - 1);
-
 export const Effects: React.FC = () => {
   const mainComposerRef = useRef<EffectComposer>();
   const glowComposerRef = useRef<EffectComposer>();
@@ -82,8 +79,8 @@ export const Effects: React.FC = () => {
   }, [ camera, gl, scene, size, ]);
 
   useLevelData(({ volume, }) => {
-    RgbShiftShader.uniforms.amount.value = EXPO(volume) / 25;
-    RgbShiftShader.uniforms.angle.value += 0.01;
+    RgbShiftShader.uniforms.amount.value = volume ** 4 / 25;
+    RgbShiftShader.uniforms.angle.value += 0.1;
   });
 
   useBeat(({ volume, }) => {

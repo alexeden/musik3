@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, } from 'react';
-import { useThree, } from 'react-three-fiber';
+import { useThree, useFrame, } from 'react-three-fiber';
 import {
-  Color, Group, Mesh, Geometry,
+  Color, Group, Mesh, Geometry, MeshBasicMaterial,
 } from 'three';
 import { useLevelData, useBeat, } from '../../hooks/useMusik';
 import { MathUtils, SimplexNoise, } from '../../lib';
@@ -12,6 +12,7 @@ const noise = new SimplexNoise(Math);
 const Level: React.FC<{ i: number; count: number }> = ({ i, count, }) => {
   const groupRef = useRef<Group | undefined>();
   const meshRef = useRef<Mesh | undefined>();
+  const materialRef = useRef<MeshBasicMaterial | undefined>();
   const { size, } = useThree();
   const planeWidth = Math.sqrt(size.width ** 2 + size.height ** 2);
   const vertDistance = Math.max(size.height, size.width) / count;
@@ -19,20 +20,28 @@ const Level: React.FC<{ i: number; count: number }> = ({ i, count, }) => {
   useLevelData(({ levels, volume, }) => {
     if (meshRef.current) {
       meshRef.current.position.y = volume * vertDistance;
-      // scale bars on levels
-      meshRef.current.scale.y = levels[i] * 0.8;
+      meshRef.current.scale.y = levels[i] ** 6;
     }
+  });
+
+  useFrame(state => {
+    const t = 0.5 * Math.sin(state.clock.getElapsedTime()) + 0.5;
+    const hue = i / count + t > 1
+      ? (i / count + t) - 1
+      : i / count + t;
+    materialRef.current?.color.setHSL(hue, 1, 0.5);
   });
 
   return (
     <group
       ref={groupRef}
       position={[ 0, vertDistance * i - vertDistance * count / 2, 0, ]}
-      scale={[ 1, (i + 1) / count * 2, 1, ]}
+      scale-y={(i + 1) / count}
     >
       <mesh ref={meshRef} >
         <meshBasicMaterial
           attach="material"
+          ref={materialRef}
           args={[ { color: new Color().setHSL(i / count, 1.0, 0.5), }, ]}
         />
         <planeGeometry
@@ -51,14 +60,13 @@ export const Levels: React.FC<{ count: number }> = ({ count, }) => {
   const { size, } = useThree();
   const planeWidth = Math.sqrt(size.width ** 2 + size.height ** 2);
 
-  useBeat(({ levels, volume, }) => {
+  useBeat(({ volume, }) => {
     if (!groupRef.current) return;
     groupRef.current.rotation.z = Math.PI / 4 * MathUtils.randomInt(0, 4);
-    // slight Y rotate
     groupRef.current.rotation.y = MathUtils.randomRange(-Math.PI / 4, Math.PI / 4);
 
     // randomize z displacements
-    const MAX_DISPLACEMENT = Math.random() * 600;
+    const MAX_DISPLACEMENT = volume ** 4 * 1000;
     const rnd = Math.random();
     const levelGeoms = groupRef.current.children
       .filter(group => group instanceof Group)
