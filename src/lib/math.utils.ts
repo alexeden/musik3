@@ -7,12 +7,8 @@ export class MathUtils {
     return Math.floor(min + Math.random() * (max - min + 1));
   }
 
-  static map(value: number, min1: number, max1: number, min2: number, max2: number) {
-    return MathUtils.lerp(MathUtils.norm(value, min1, max1), min2, max2);
-  }
-
-  static lerp(value: number, min: number, max: number) {
-    return min + (max - min) * value;
+  static lerp(x: number, v0: number, v1: number) {
+    return v0 * (1 - x) + v1 * x;
   }
 
   static norm(value: number, min: number, max: number) {
