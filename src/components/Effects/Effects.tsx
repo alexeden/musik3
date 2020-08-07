@@ -1,53 +1,60 @@
-import React, { useRef, useMemo, useEffect, } from 'react';
-import { extend, useThree, useFrame, } from 'react-three-fiber';
 import {
-  EffectComposer, RenderPass, BloomEffect, ShaderPass, EffectPass,
+  BloomEffect, EffectComposer, EffectPass, RenderPass, ShaderPass,
 } from 'postprocessing';
-import { Bloom, } from 'react-postprocessing';
-import * as ps from 'postprocessing';
+import React, { useEffect, useMemo, useRef, } from 'react';
+import { useFrame, useThree, } from 'react-three-fiber';
+import { useBeat, useLevelData, } from '../../hooks/useMusik';
 import {
-  wrapEffect, CopyShader, HorizontalBlurShader, VerticalBlurShader, AdditiveBlendShader, FilmShader, BadTvShader, MirrorShader, RgbShiftShader, MathUtils,
+  AdditiveBlendShader, BadTvShader, CopyShader, FilmShader, HorizontalBlurShader,
+  MirrorShader, RgbShiftShader, VerticalBlurShader,
 } from '../../lib';
-import { useBeat, } from '../../hooks/useMusik';
 
-(window as any).ps = ps;
-// const x: ps.Normal
-extend({ BloomEffect, });
-
-// const bloomEffect = wrapEffect(BloomEffect);
+const E3 = Math.E ** 3;
+const EXPO = (value: number) => E3 ** (value - 1);
 
 export const Effects: React.FC = () => {
-  const composerRef = useRef<EffectComposer>();
-  (window as any).composerRef = composerRef;
+  const mainComposerRef = useRef<EffectComposer>();
+  const glowComposerRef = useRef<EffectComposer>();
+  const renderComposerRef = useRef<EffectComposer>();
+
   const {
     scene, gl, size, camera,
   } = useThree();
-  const composer = useMemo(() => {
+
+  const composerMemo = useMemo(() => {
     const renderComposer = new EffectComposer(gl);
+    renderComposerRef.current = renderComposer;
     const renderPass = new RenderPass(scene, camera);
-    const renderCopyPass = new ShaderPass(CopyShader);
-    const bloomPass = new EffectPass(camera, new BloomEffect({
+    const bloomEffect = new BloomEffect({
       luminanceSmoothing: 1,
       luminanceThreshold: 0,
-    }));
+      height: size.height / 3,
+      width: size.width / 3,
+    });
+
+    const bloomPass = new EffectPass(camera, bloomEffect);
     renderComposer.addPass(renderPass);
     renderComposer.addPass(bloomPass);
-    // const glowComposer = new EffectComposer(gl);
-    // const glowCopyPass = new ShaderPass(CopyShader);
+    renderComposer.addPass(new ShaderPass(CopyShader));
+
+    const glowComposer = new EffectComposer(gl);
+    glowComposerRef.current = glowComposer;
     const hBlurPass = new ShaderPass(HorizontalBlurShader);
     const vBlurPass = new ShaderPass(VerticalBlurShader);
-    renderComposer.addPass(bloomPass);
-    renderComposer.addPass(hBlurPass);
-    renderComposer.addPass(vBlurPass);
-    // renderComposer.addPass(hBlurPass);
-    // renderComposer.addPass(vBlurPass);
+    glowComposer.addPass(new ShaderPass(CopyShader));
+    glowComposer.addPass(renderPass);
+    glowComposer.addPass(bloomPass);
+    glowComposer.addPass(hBlurPass);
+    glowComposer.addPass(vBlurPass);
+    glowComposer.addPass(hBlurPass);
+    glowComposer.addPass(vBlurPass);
 
-    // const finalComposer = new EffectComposer(gl);
+    const composer = new EffectComposer(gl);
     const blendPass = new ShaderPass(AdditiveBlendShader);
     AdditiveBlendShader.uniforms.tBase.value = renderComposer.outputBuffer;
-    // AdditiveBlendShader.uniforms.tAdd.value = glowComposer.outputBuffer;
+    AdditiveBlendShader.uniforms.tAdd.value = glowComposer.outputBuffer;
     AdditiveBlendShader.uniforms.amount.value = 1; // This is the glow value!
-    renderComposer.addPass(blendPass);
+    composer.addPass(blendPass);
 
     const filmPass = new ShaderPass(FilmShader);
     FilmShader.uniforms.grayscale.value = 0;
@@ -56,72 +63,63 @@ export const Effects: React.FC = () => {
     FilmShader.uniforms.sCount.value = 600;
 
     const badTvPass = new ShaderPass(BadTvShader);
-    BadTvShader.uniforms.rollSpeed.value = 1;
-    BadTvShader.uniforms.distortion.value = 1;
-    BadTvShader.uniforms.distortion2.value = 1;
+    BadTvShader.uniforms.rollSpeed.value = 0;
+    BadTvShader.uniforms.distortion.value = 0;
+    BadTvShader.uniforms.distortion2.value = 0;
 
     const mirrorPass = new ShaderPass(MirrorShader);
 
     const rgbShiftPass = new ShaderPass(RgbShiftShader);
 
-    renderComposer.addPass(mirrorPass);
-    // renderComposer.addPass(badTvPass);
-    renderComposer.addPass(filmPass);
-    renderComposer.addPass(rgbShiftPass);
-    renderComposer.addPass(bloomPass);
+    composer.addPass(mirrorPass);
+    composer.addPass(badTvPass);
+    composer.addPass(rgbShiftPass);
+    composer.addPass(filmPass);
 
-    // filmPass.renderToScreen = true;
-    renderComposer.addPass(renderCopyPass);
-    renderCopyPass.renderToScreen = true;
+    filmPass.renderToScreen = true;
 
-    return renderComposer;
-  }, [ camera, gl, scene, ]);
+    return composer;
+  }, [ camera, gl, scene, size, ]);
 
-  // const renderPass = useMemo(() => new RenderPass(scene, camera), [ scene, camera, ]);
+  useLevelData(({ volume, }) => {
+    RgbShiftShader.uniforms.amount.value = EXPO(volume) / 25;
+    RgbShiftShader.uniforms.angle.value += 0.01;
+  });
 
-  useEffect(() => composerRef.current?.setSize(size.width, size.height), [ size, ]);
-  useFrame((state, delta) => composerRef.current?.render(delta), 2);
-
-  // Update the blurs according to frame size
-  useEffect(() => {
-    HorizontalBlurShader.uniforms.h.value = 1 / size.width;
-    VerticalBlurShader.uniforms.v.value = 1 / size.height;
-  }, [ size, ]);
-
-  useBeat(() => {
-    RgbShiftShader.uniforms.amount.value = MathUtils.randomInt(5, 55) / 1000;
-    // BadTvShader.uniforms.distortion.value = 4.0;
-    // BadTvShader.uniforms.distortion2.value = 5.0;
-    MirrorShader.uniforms.side.value = Math.floor(MathUtils.randomInt(0, 3));
+  useBeat(({ volume, }) => {
+    BadTvShader.uniforms.distortion.value = 4.0;
+    BadTvShader.uniforms.distortion2.value = 5.0;
+    MirrorShader.uniforms.side.value = Math.floor(4 * Math.random());
 
     setTimeout(() => {
-      RgbShiftShader.uniforms.amount.value = 5 / 1000;
-      // BadTvShader.uniforms.distortion.value = 0.0001;
-      // BadTvShader.uniforms.distortion2.value = 0.0001;
+      BadTvShader.uniforms.distortion.value = 0.0001;
+      BadTvShader.uniforms.distortion2.value = 0.0001;
     }, 100);
   });
 
+  /** Resize update */
+  useEffect(() => {
+    HorizontalBlurShader.uniforms.h.value = 3 / size.width;
+    VerticalBlurShader.uniforms.v.value = 3 / size.height;
+    mainComposerRef.current?.setSize(size.width, size.height);
+    glowComposerRef.current?.setSize(size.width / 4, size.height / 4);
+    renderComposerRef.current?.setSize(size.width, size.height);
+  }, [ size, ]);
+
+  /** Render! */
+  useFrame((_, delta) => {
+    FilmShader.uniforms.time.value += delta;
+    BadTvShader.uniforms.time.value += delta;
+    renderComposerRef.current?.render(delta);
+    glowComposerRef.current?.render(delta);
+    mainComposerRef.current?.render(delta);
+  }, 2);
+
   return (
     <primitive
-      ref={composerRef}
-      object={composer}
+      ref={mainComposerRef}
+      object={composerMemo}
       dispose={null}
     />
-  /* <primitive
-        attachArray="passes"
-        object={renderPass}
-        dispose={null}
-
-      />
-      <bloomEffect
-        attachArray="passes"
-        luminanceSmoothing={1}
-        luminanceThreshold={0}
-        renderToScreen
-      /> */
-  // </primitive>
-  // <EffectComposer>
-
-  // </EffectComposer>
   );
 };

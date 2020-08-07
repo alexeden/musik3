@@ -1,10 +1,19 @@
-import { ShaderMaterial } from 'three';
+import { ShaderMaterial, } from 'three';
 
 export const AdditiveBlendShader = new ShaderMaterial({
   uniforms: {
-    tBase: { type: 't', value: null },
-    tAdd: { type: 't', value: null },
-    amount: { type: 'f', value: 1.0 },
+    tBase: {
+      type: 't',
+      value: null,
+    },
+    tAdd: {
+      type: 't',
+      value: null,
+    },
+    amount: {
+      type: 'f',
+      value: 1.0,
+    },
   },
   vertexShader: `
     varying vec2 vUv;

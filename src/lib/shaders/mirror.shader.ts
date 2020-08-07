@@ -1,10 +1,9 @@
-import { ShaderMaterial, Uniform } from 'three';
-import { Effect } from 'postprocessing';
+import { ShaderMaterial, } from 'three';
 
 export const MirrorShader = new ShaderMaterial({
   uniforms: {
-    inputBuffer: { type: 't', value: null },
-    side: { type: 'i', value: 1 },
+    inputBuffer: { type: 't', value: null, },
+    side: { type: 'i', value: 1, },
   },
 
   vertexShader: `

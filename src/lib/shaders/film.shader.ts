@@ -1,13 +1,31 @@
-import { ShaderMaterial } from 'three';
+import { ShaderMaterial, } from 'three';
 
 export const FilmShader = new ShaderMaterial({
   uniforms: {
-    inputBuffer: { type: 't', value: null },
-    time:        { type: 'f', value: 0.0 },
-    nIntensity:  { type: 'f', value: 0.5 },
-    sIntensity:  { type: 'f', value: 0.05 },
-    sCount:      { type: 'f', value: 4096 },
-    grayscale:   { type: 'i', value: 1 },
+    inputBuffer: {
+      type: 't',
+      value: null,
+    },
+    time: {
+      type: 'f',
+      value: 0.0,
+    },
+    nIntensity: {
+      type: 'f',
+      value: 0.5,
+    },
+    sIntensity: {
+      type: 'f',
+      value: 0.05,
+    },
+    sCount: {
+      type: 'f',
+      value: 4096,
+    },
+    grayscale: {
+      type: 'i',
+      value: 1,
+    },
   },
 
   vertexShader: `

@@ -20,7 +20,7 @@ const Level: React.FC<{ i: number; count: number }> = ({ i, count, }) => {
     if (meshRef.current) {
       meshRef.current.position.y = volume * vertDistance;
       // scale bars on levels
-      meshRef.current.scale.y = levels[i];
+      meshRef.current.scale.y = levels[i] * 0.8;
     }
   });
 
@@ -54,9 +54,10 @@ export const Levels: React.FC<{ count: number }> = ({ count, }) => {
   useBeat(({ levels, volume, }) => {
     if (!groupRef.current) return;
     groupRef.current.rotation.z = Math.PI / 4 * MathUtils.randomInt(0, 4);
-    groupRef.current.rotation.y = MathUtils.randomRange(-Math.PI / 4, Math.PI / 4); // slight Y rotate
+    // slight Y rotate
+    groupRef.current.rotation.y = MathUtils.randomRange(-Math.PI / 4, Math.PI / 4);
 
-    // rejigger z disps
+    // randomize z displacements
     const MAX_DISPLACEMENT = Math.random() * 600;
     const rnd = Math.random();
     const levelGeoms = groupRef.current.children
