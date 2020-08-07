@@ -3,7 +3,7 @@ import { Group, Mesh, MeshBasicMaterial, } from 'three';
 import { useLevelData, useBeat, } from '../../hooks/useMusik';
 
 const radiusOut = 600;
-const radiusIn = 0.6 * radiusOut;
+const radiusIn = 0.7 * radiusOut;
 
 export const GeoRing: React.FC = () => {
   const groupRef = useRef<Group>();
@@ -32,13 +32,12 @@ export const GeoRing: React.FC = () => {
   useBeat(() => {
     const shapes = (groupRef.current?.children ?? []) as Mesh[];
 
-    // random rotation of whole group
-    groupRef.current!.rotation.z = Math.random() * Math.PI;
-
     // hide all the shapes by turning them
     shapes.forEach(shape => {
       shape.rotation.y = Math.PI / 2;
     });
+    // random rotation of whole group
+    groupRef.current!.rotation.z = Math.random() * Math.PI;
 
     // sometimes reveal one of them
     if (Math.random() < 0.8) {
