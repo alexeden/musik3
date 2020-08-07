@@ -7,7 +7,9 @@
     "new:component": "npx hygen component new",
     "lint": "eslint --ext ts,tsx --ignore-pattern node_modules .",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "tag-app": "node -p \"'v' + require('./package.json').version.split('.').join('-')\"",
+    "postversion": "git tag $(npm run tag-app --silent)"
   },
   "dependencies": {
     "postprocessing": "github:alexeden/postprocessing#20953c5f2941e6fef5656a8d20367f8a846447dd",
