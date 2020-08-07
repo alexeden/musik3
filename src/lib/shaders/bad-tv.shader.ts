@@ -24,7 +24,7 @@ export const BadTvShader = new ShaderMaterial({
     },
     rollSpeed: {
       type: 'f',
-      value: 0.05,
+      value: 0.0,
     },
   },
 

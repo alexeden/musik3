@@ -57,15 +57,10 @@ export const Effects: React.FC = () => {
     FilmShader.uniforms.grayscale.value = 0;
     FilmShader.uniforms.nIntensity.value = 0.6;
     FilmShader.uniforms.sIntensity.value = 0.7;
-    FilmShader.uniforms.sCount.value = 600;
+    FilmShader.uniforms.sCount.value = 0.7 * size.height;
 
     const badTvPass = new ShaderPass(BadTvShader);
-    BadTvShader.uniforms.rollSpeed.value = 0;
-    BadTvShader.uniforms.distortion.value = 0;
-    BadTvShader.uniforms.distortion2.value = 0;
-
     const mirrorPass = new ShaderPass(MirrorShader);
-
     const rgbShiftPass = new ShaderPass(RgbShiftShader);
 
     composer.addPass(mirrorPass);
@@ -81,17 +76,12 @@ export const Effects: React.FC = () => {
   useLevelData(({ volume, }) => {
     RgbShiftShader.uniforms.amount.value = volume ** 4 / 25;
     RgbShiftShader.uniforms.angle.value += 0.1;
+    BadTvShader.uniforms.distortion.value = 10 * volume ** 4;
+    BadTvShader.uniforms.distortion2.value = 4 * Math.random() * volume;
   });
 
   useBeat(({ volume, }) => {
-    BadTvShader.uniforms.distortion.value = 4.0;
-    BadTvShader.uniforms.distortion2.value = 5.0;
     MirrorShader.uniforms.side.value = Math.floor(4 * Math.random());
-
-    setTimeout(() => {
-      BadTvShader.uniforms.distortion.value = 0.0001;
-      BadTvShader.uniforms.distortion2.value = 0.0001;
-    }, 100);
   });
 
   /** Resize update */

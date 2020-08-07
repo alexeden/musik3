@@ -136,15 +136,13 @@ export const useMusik = () => {
   const [ isPlaying, setIsPlaying, ] = useState(context.state === 'running');
 
   const onAudioBuffer = useCallback((buffer: AudioBuffer) => {
-    connect(buffer).start(0);
+    connect(buffer).start(0, 120);
   }, [ connect, ]);
 
   context.onstatechange = () => {
-    console.log('setting is playing, state change', context.state);
     setIsPlaying(context.state === 'running');
   };
 
-  console.log('isPlaying: ', isPlaying);
   return {
     isLoading,
     isPlaying,

@@ -8,7 +8,7 @@ type Props = {
 export const MusikControls: React.FC<Props> = props => {
   const musik = useMusik();
 
-  useEffect(() => void musik.load('/hallucinate.mp3'), []); // eslint-disable-line
+  useEffect(() => void musik.load('/sine-from-above.mp3'), []); // eslint-disable-line
 
   return (
     <div>
