@@ -58,12 +58,6 @@ export const useFreqTimeData = () => {
   const { analyzer, context, } = useAudioAnalyzer();
   const freq = useRef(new Uint8Array(analyzer.frequencyBinCount));
   const time = useRef(new Uint8Array(analyzer.frequencyBinCount));
-  context.onstatechange = () => {
-    if (context.state === 'suspended') {
-      freq.current = new Uint8Array(analyzer.frequencyBinCount);
-      time.current = new Uint8Array(analyzer.frequencyBinCount);
-    }
-  };
 
   useAnimationFrame(() => {
     if (context.state !== 'suspended') {
@@ -137,18 +131,23 @@ export const useBeat = (cb: (data: LevelData) => void) => {
 export const useMusik = () => {
   const useRefFunction = useRefFunctions();
   const { analyzer, context, } = useAudioAnalyzer();
-  const { connect, source, } = useAudioBufferSourceNode();
+  const { connect, } = useAudioBufferSourceNode();
   const [ isLoading, setIsLoading, ] = useState(false);
+  const [ isPlaying, setIsPlaying, ] = useState(context.state === 'running');
 
   const onAudioBuffer = useCallback((buffer: AudioBuffer) => {
     connect(buffer).start(0);
   }, [ connect, ]);
 
-  (window as any).analyzer = analyzer;
-  (window as any).source = source;
-  (window as any).context = context;
+  context.onstatechange = () => {
+    console.log('setting is playing, state change', context.state);
+    setIsPlaying(context.state === 'running');
+  };
+
+  console.log('isPlaying: ', isPlaying);
   return {
     isLoading,
+    isPlaying,
     play: () => context.resume(),
     pause: () => context.suspend(),
     load: useRefFunction('load', (url: string) => {
