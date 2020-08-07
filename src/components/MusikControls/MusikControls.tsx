@@ -1,18 +1,14 @@
 import React, { useEffect, } from 'react';
 import { useMusik, } from '../../hooks/useMusik';
 
-type Props = {
-
-};
-
-export const MusikControls: React.FC<Props> = props => {
+export const MusikControls: React.FC = () => {
   const musik = useMusik();
 
   useEffect(() => void musik.load('/sine-from-above.mp3'), []); // eslint-disable-line
 
   return (
     <div>
-      <button onClick={() => musik.load('/rabbit-hole.mp3')}>{musik.isLoading ? '...' : 'Load'}</button>
+      <button onClick={() => musik.load('/pusher.mp3')}>{musik.isLoading ? '...' : 'Load'}</button>
       {!musik.isPlaying && <button onClick={() => musik.play()}>Play</button>}
       {musik.isPlaying && <button onClick={() => musik.pause()}>Pause</button>}
     </div>
