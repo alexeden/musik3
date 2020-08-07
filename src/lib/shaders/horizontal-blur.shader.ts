@@ -1,9 +1,9 @@
-import { ShaderMaterial } from 'three';
+import { ShaderMaterial, } from 'three';
 
 export const HorizontalBlurShader = new ShaderMaterial({
   uniforms: {
-    inputBuffer: { type: 't', value: null },
-    h:        { type: 'f', value: 1.0 / 512.0 },
+    inputBuffer: { type: 't', value: null, },
+    h: { type: 'f', value: 1.0 / 512.0, },
   },
   vertexShader: `
     varying vec2 vUv;

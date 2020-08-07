@@ -1,9 +1,8 @@
 import React from 'react';
 import { Canvas, } from 'react-three-fiber';
+import Effects from '../Effects';
 import GeoRing from '../GeoRing';
 import Levels from '../Levels';
-import Effects from '../Effects';
-import { useMusik, } from '../../hooks/useMusik';
 
 export const MusikCanvas: React.FC = () => (
   <Canvas

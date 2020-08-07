@@ -1,23 +1,25 @@
-import { Vector2 } from 'three';
-import { Shader } from './types';
+import { Vector2, } from 'three';
+import { Shader, } from './types';
 
 export const ConvolutionShader: Shader = {
-
   defines: {
-
-    'KERNEL_SIZE_FLOAT': '25.0',
-    'KERNEL_SIZE_INT': '25',
-
+    KERNEL_SIZE_FLOAT: '25.0',
+    KERNEL_SIZE_INT: '25',
   },
-
   uniforms: {
-
-    'tDiffuse':        { type: 't', value: null },
-    'uImageIncrement': { type: 'v2', value: new Vector2(0.001953125, 0.0) },
-    'cKernel':         { type: 'fv1', value: [] },
-
+    tDiffuse: {
+      type: 't',
+      value: null,
+    },
+    uImageIncrement: {
+      type: 'v2',
+      value: new Vector2(0.001953125, 0.0),
+    },
+    cKernel: {
+      type: 'fv1',
+      value: [],
+    },
   },
-
   vertexShader: `
   uniform vec2 uImageIncrement;
   varying vec2 vUv;
@@ -43,35 +45,33 @@ export const ConvolutionShader: Shader = {
   `,
 
   buildKernel(sigma: number) {
-
     // We lop off the sqrt(2 * pi) * sigma term, since we're going to normalize anyway.
 
     // tslint:disable-next-line: no-shadowed-variable
-    const gauss = (x: number, sigma: number) => Math.exp(- (x * x) / (2.0 * sigma * sigma));
+    const gauss = (x: number, _sigma: number) => Math.exp(-(x * x) / (2.0 * _sigma * _sigma));
 
     const kMaxKernelSize = 25;
     // tslint:disable-next-line: one-variable-per-declaration
-    let i, sum, halfWidth, kernelSize = 2 * Math.ceil(sigma * 3.0) + 1;
+    let i;
+    let sum;
+    let kernelSize = 2 * Math.ceil(sigma * 3.0) + 1;
 
     if (kernelSize > kMaxKernelSize) kernelSize = kMaxKernelSize;
-    halfWidth = (kernelSize - 1) * 0.5;
+    const halfWidth = (kernelSize - 1) * 0.5;
 
     const values: number[] = new Array(kernelSize);
 
     sum = 0.0;
     for (i = 0; i < kernelSize; ++i) {
-
-      values[ i ] = gauss(i - halfWidth, sigma);
-      sum += values[ i ];
-
+      values[i] = gauss(i - halfWidth, sigma);
+      sum += values[i];
     }
 
     // normalize the kernel
 
-    for (i = 0; i < kernelSize; ++i) values[ i ] /= sum;
+    for (i = 0; i < kernelSize; ++i) values[i] /= sum;
 
     return values;
-
   },
 
 };

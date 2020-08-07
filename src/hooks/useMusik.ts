@@ -8,7 +8,7 @@ const GAIN = 1.7;
 const BEAT_MIN = 0.15; // level less than this is no beat
 const BEAT_HOLD_TIME = 40;
 const BEAT_DECAY = 0.9;
-const msecsAvg = 633; // time between beats (msec)
+// const msecsAvg = 633; // time between beats (msec)
 
 const useAudioAnalyzer = (() => {
   const context = new AudioContext();

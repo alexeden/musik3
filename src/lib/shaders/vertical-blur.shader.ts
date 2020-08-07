@@ -1,9 +1,9 @@
-import { ShaderMaterial } from 'three';
+import { ShaderMaterial, } from 'three';
 
 export const VerticalBlurShader = new ShaderMaterial({
   uniforms: {
-    inputBuffer: { type: 't', value: null },
-    v:        { type: 'f', value: 1.0 / 512.0 },
+    inputBuffer: { type: 't', value: null, },
+    v: { type: 'f', value: 1.0 / 512.0, },
   },
 
   vertexShader: `

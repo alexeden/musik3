@@ -1,4 +1,4 @@
-import { ShaderMaterial } from 'three';
+import { ShaderMaterial, } from 'three';
 
 export const CopyShader = new ShaderMaterial({
 
@@ -7,7 +7,7 @@ export const CopyShader = new ShaderMaterial({
       type: 't',
       value: null,
     },
-    opacity:  {
+    opacity: {
       type: 'f',
       value: 1.0,
     },
