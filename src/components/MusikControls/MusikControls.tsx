@@ -8,7 +8,7 @@ export const MusikControls: React.FC = () => {
 
   return (
     <div>
-      <button onClick={() => musik.load('/pusher.mp3')}>{musik.isLoading ? '...' : 'Load'}</button>
+      <button onClick={() => musik.load('/hallucinate.mp3')}>{musik.isLoading ? '...' : 'Load'}</button>
       {!musik.isPlaying && <button onClick={() => musik.play()}>Play</button>}
       {musik.isPlaying && <button onClick={() => musik.pause()}>Pause</button>}
     </div>

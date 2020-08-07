@@ -136,7 +136,7 @@ export const useMusik = () => {
   const [ isPlaying, setIsPlaying, ] = useState(context.state === 'running');
 
   const onAudioBuffer = useCallback((buffer: AudioBuffer) => {
-    connect(buffer).start(0, 120);
+    connect(buffer).start();
   }, [ connect, ]);
 
   context.onstatechange = () => {
