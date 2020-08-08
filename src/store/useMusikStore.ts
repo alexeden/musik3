@@ -6,9 +6,9 @@ export type MusikState = {
   audioBuffer: AudioBuffer | null;
   clock: THREE.Clock;
   context: AudioContext;
-  isLoading: boolean;
+  isPlaying: boolean;
   actions: {
-    load: (url: string) => Promise<AudioBuffer>;
+    connectSource: (buffer: AudioBuffer) => void;
   };
 };
 
@@ -17,25 +17,27 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
   const analyzer = context.createAnalyser();
   analyzer.smoothingTimeConstant = 0.3; // smooths out bar chart movement over time
   analyzer.fftSize = 1024;
+  analyzer.connect(context.destination);
+
+  context.addEventListener('statechange', () => {
+    set({ isPlaying: context.state === 'running', });
+  });
+
+  let source: AudioBufferSourceNode | null = null;
 
   return {
     analyzer,
     audioBuffer: null,
     clock: new THREE.Clock(),
     context,
-    isLoading: false,
+    isPlaying: false,
     actions: {
-      load: url => {
-        set(() => ({ isLoading: true, }));
-
-        return fetch(url)
-          .then(response => response.arrayBuffer())
-          .then(buffer => analyzer.context.decodeAudioData(buffer))
-          .then(audioBuffer => {
-            set(() => ({ audioBuffer, }));
-            return audioBuffer;
-          })
-          .finally(() => set(() => ({ isLoading: false, })));
+      connectSource: buffer => {
+        source?.disconnect();
+        source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(analyzer);
+        source.start();
       },
     },
   };

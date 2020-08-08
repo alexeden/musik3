@@ -112,34 +112,22 @@ export const useBeat = (cb: (data: LevelData) => void) => {
 
 export const useMusik = () => {
   const { analyzer, context, } = useAudioAnalyzer();
-  const { connect, } = useAudioBufferSourceNode();
-  const [ isLoading, setIsLoading, ] = useState(false);
-  const [ isPlaying, setIsPlaying, ] = useState(context.state === 'running');
+  // const { connect, } = useAudioBufferSourceNode();
+  // const [ isLoading, setIsLoading, ] = useState(false);
+  // const [ isPlaying, setIsPlaying, ] = useState(context.state === 'running');
 
-  const onAudioBuffer = useCallback((buffer: AudioBuffer) => {
-    connect(buffer).start();
-  }, [ connect, ]);
+  // const onAudioBuffer = useCallback((buffer: AudioBuffer) => {
+  //   connect(buffer).start();
+  // }, [ connect, ]);
 
-  context.onstatechange = () => {
-    setIsPlaying(context.state === 'running');
-  };
+  // context.onstatechange = () => {
+  //   setIsPlaying(context.state === 'running');
+  // };
 
   return {
-    isLoading,
-    isPlaying,
+    // isLoading,
+    // isPlaying,
     play: () => context.resume(),
     pause: () => context.suspend(),
-    load: (url: string) => {
-      setIsLoading(() => true);
-
-      return fetch(url)
-        .then(response => response.arrayBuffer())
-        .then(buffer => analyzer.context.decodeAudioData(buffer))
-        .then(audioBuffer => {
-          onAudioBuffer(audioBuffer);
-          return audioBuffer;
-        })
-        .finally(() => setIsLoading(() => false));
-    },
   };
 };
