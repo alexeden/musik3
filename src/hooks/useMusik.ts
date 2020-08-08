@@ -1,7 +1,5 @@
-import {
-  useCallback, useEffect, useRef, useState,
-} from 'react';
-import { useRefFunctions, } from './useRefFunctions';
+import { useCallback, useRef, useState, } from 'react';
+import { useAnimationFrame, } from './useAnimationFrame';
 
 const LEVELS_COUNT = 16;
 const GAIN = 1.7;
@@ -36,22 +34,6 @@ const useAudioBufferSourceNode = () => {
       return sourceRef.current;
     },
   };
-};
-
-const useAnimationFrame = (cb: FrameRequestCallback) => {
-  useEffect(() => {
-    let stop = false;
-    const next = (t: number) => {
-      cb(t);
-      if (!stop) requestAnimationFrame(next);
-    };
-
-    next(performance.now());
-
-    return () => {
-      stop = true;
-    };
-  }, [ cb, ]);
 };
 
 export const useFreqTimeData = () => {
@@ -129,7 +111,6 @@ export const useBeat = (cb: (data: LevelData) => void) => {
 };
 
 export const useMusik = () => {
-  const useRefFunction = useRefFunctions();
   const { analyzer, context, } = useAudioAnalyzer();
   const { connect, } = useAudioBufferSourceNode();
   const [ isLoading, setIsLoading, ] = useState(false);
@@ -148,8 +129,8 @@ export const useMusik = () => {
     isPlaying,
     play: () => context.resume(),
     pause: () => context.suspend(),
-    load: useRefFunction('load', (url: string) => {
-      setIsLoading(true);
+    load: (url: string) => {
+      setIsLoading(() => true);
 
       return fetch(url)
         .then(response => response.arrayBuffer())
@@ -158,7 +139,7 @@ export const useMusik = () => {
           onAudioBuffer(audioBuffer);
           return audioBuffer;
         })
-        .finally(() => setIsLoading(false));
-    }),
+        .finally(() => setIsLoading(() => false));
+    },
   };
 };
