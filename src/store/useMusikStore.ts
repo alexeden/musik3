@@ -9,7 +9,7 @@ export type MusikState = {
   isPlaying: boolean;
   actions: {
     connectSource: (buffer: AudioBuffer) => AudioBufferSourceNode;
-    play: () => Promise<void>;
+    play: () => void;
     pause: () => void;
   };
 };
@@ -44,6 +44,7 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
       play: async () => {
         if (!source?.buffer) return;
         get().actions.connectSource(source?.buffer);
+        source.start();
         return context.resume();
       },
       pause: () => context.suspend(),
