@@ -25,7 +25,7 @@ export const [ useStore, api, ] = create<State>((set, get, _api) => {
     context,
     isLoading: false,
     actions: {
-      load: (url: string) => {
+      load: url => {
         set(() => ({ isLoading: true, }));
 
         return fetch(url)
