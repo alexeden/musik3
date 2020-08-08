@@ -8,8 +8,8 @@ export type MusikState = {
   context: AudioContext;
   isPlaying: boolean;
   actions: {
-    connectSource: (buffer: AudioBuffer) => void;
-    play: () => void;
+    connectSource: (buffer: AudioBuffer) => AudioBufferSourceNode;
+    play: () => Promise<void>;
     pause: () => void;
   };
 };
@@ -39,10 +39,13 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
         source = context.createBufferSource();
         source.buffer = buffer;
         source.connect(analyzer);
-        source.start();
-        console.log('SOURCE CONNECTED AND STARTED');
+        return source;
       },
-      play: () => context.resume(),
+      play: async () => {
+        if (!source?.buffer) return;
+        get().actions.connectSource(source?.buffer);
+        return context.resume();
+      },
       pause: () => context.suspend(),
     },
   };

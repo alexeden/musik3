@@ -9,11 +9,12 @@ export const MusikCanvas: React.FC = () => {
   const isPlaying = useMusikStore(state => state.isPlaying);
   const { pause, play, } = useMusikStore(store => store.actions);
 
-  console.log('STATE CHANGE!', isPlaying);
-
   return (
     <Canvas
-      // onClick={() => (isPlaying ? pause() : play())}
+      onClick={() => {
+        console.log('CLICK');
+        (isPlaying ? pause() : play());
+      }}
       camera={{ fov: 70, near: 100, far: 2000, }}
       gl={{ antialias: false, }}
       gl2

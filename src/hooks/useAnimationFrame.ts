@@ -1,8 +1,7 @@
-import { useEffect, useRef, } from 'react';
+import { useEffect, } from 'react';
 
 export const useAnimationFrame = (cb: FrameRequestCallback, cleanup?: () => void) => {
   useEffect(() => {
-    // const stopRef = useRef(false);
     let stop = false;
 
     const next = (t: number) => {
@@ -14,7 +13,6 @@ export const useAnimationFrame = (cb: FrameRequestCallback, cleanup?: () => void
 
     return () => {
       cleanup?.();
-      console.log('useAnimationFrame has is cleaning up'); // eslint-disable-line
       stop = true;
     };
   }, [ cb, cleanup, ]);
