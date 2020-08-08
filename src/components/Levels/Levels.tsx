@@ -5,11 +5,13 @@ import {
 } from 'three';
 import { useLevelData, useBeat, } from '../../hooks/useMusik';
 import { MathUtils, SimplexNoise, } from '../../lib';
+import { useMusikStore, } from '../../store';
 
 const SEGMENTS = 10;
 const noise = new SimplexNoise(Math);
 
 const Level: React.FC<{ i: number; count: number }> = ({ i, count, }) => {
+  const analyzer = useMusikStore(state => state.analyzer);
   const groupRef = useRef<Group | undefined>();
   const meshRef = useRef<Mesh | undefined>();
   const materialRef = useRef<MeshBasicMaterial | undefined>();
@@ -17,7 +19,7 @@ const Level: React.FC<{ i: number; count: number }> = ({ i, count, }) => {
   const planeWidth = Math.sqrt(size.width ** 2 + size.height ** 2);
   const vertDistance = Math.max(size.height, size.width) / count;
 
-  useLevelData(({ levels, volume, }) => {
+  useLevelData(analyzer, ({ levels, volume, }) => {
     if (meshRef.current) {
       meshRef.current.position.y = volume * vertDistance;
       meshRef.current.scale.y = levels[i] ** 6;
@@ -54,13 +56,14 @@ const Level: React.FC<{ i: number; count: number }> = ({ i, count, }) => {
 };
 
 export const Levels: React.FC<{ count: number }> = ({ count, }) => {
+  const analyzer = useMusikStore(state => state.analyzer);
   const groupRef = useRef<Group>();
   const indices = useMemo(() => [ ...Array(count).keys(), ], [ count, ]);
 
   const { size, } = useThree();
   const planeWidth = Math.sqrt(size.width ** 2 + size.height ** 2);
 
-  useBeat(({ volume, }) => {
+  useBeat(analyzer, ({ volume, }) => {
     if (!groupRef.current) return;
     groupRef.current.rotation.z = Math.PI / 4 * MathUtils.randomInt(0, 4);
     groupRef.current.rotation.y = MathUtils.randomRange(-Math.PI / 4, Math.PI / 4);

@@ -3,11 +3,13 @@ import { Group, Mesh, MeshBasicMaterial, } from 'three';
 import { useFrame, } from 'react-three-fiber';
 import { useLevelData, useBeat, } from '../../hooks/useMusik';
 import { MathUtils, } from '../../lib';
+import { useMusikStore, } from '../../store';
 
 const radiusOut = 600;
 const radiusIn = 0.7 * radiusOut;
 
 export const GeoRing: React.FC = () => {
+  const analyzer = useMusikStore(state => state.analyzer);
   const groupRef = useRef<Group>();
   const material = useMemo(() => new MeshBasicMaterial({
     color: 0xFFFFFF,
@@ -25,7 +27,7 @@ export const GeoRing: React.FC = () => {
     });
   });
 
-  useLevelData(({ volume, }) => {
+  useLevelData(analyzer, ({ volume, }) => {
     const shapes = (groupRef.current?.children ?? []) as Mesh[];
 
     shapes.forEach((shape, i) => {
@@ -36,7 +38,7 @@ export const GeoRing: React.FC = () => {
     });
   });
 
-  useBeat(({ volume, }) => {
+  useBeat(analyzer, ({ volume, }) => {
     const shapes = (groupRef.current?.children ?? []) as Mesh[];
 
     // hide all the shapes by turning them

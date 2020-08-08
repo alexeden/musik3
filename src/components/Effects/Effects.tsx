@@ -8,8 +8,10 @@ import {
   AdditiveBlendShader, BadTvShader, CopyShader, FilmShader, HorizontalBlurShader,
   MirrorShader, RgbShiftShader, VerticalBlurShader,
 } from '../../lib';
+import { useMusikStore, } from '../../store';
 
 export const Effects: React.FC = () => {
+  const analyzer = useMusikStore(state => state.analyzer);
   const mainComposerRef = useRef<EffectComposer>();
   const glowComposerRef = useRef<EffectComposer>();
   const renderComposerRef = useRef<EffectComposer>();
@@ -73,14 +75,14 @@ export const Effects: React.FC = () => {
     return composer;
   }, [ camera, gl, scene, size, ]);
 
-  useLevelData(({ volume, }) => {
+  useLevelData(analyzer, ({ volume, }) => {
     RgbShiftShader.uniforms.amount.value = volume ** 4 / 25;
     RgbShiftShader.uniforms.angle.value += 0.1;
     BadTvShader.uniforms.distortion.value = 10 * volume ** 4;
     BadTvShader.uniforms.distortion2.value = 4 * Math.random() * volume;
   });
 
-  useBeat(({ volume, }) => {
+  useBeat(analyzer, ({ volume, }) => {
     MirrorShader.uniforms.side.value = Math.floor(4 * Math.random());
   });
 

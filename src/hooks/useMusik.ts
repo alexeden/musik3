@@ -36,13 +36,12 @@ const useAudioBufferSourceNode = () => {
   };
 };
 
-export const useFreqTimeData = () => {
-  const { analyzer, context, } = useAudioAnalyzer();
+export const useFreqTimeData = (analyzer: AnalyserNode) => {
   const freq = useRef(new Uint8Array(analyzer.frequencyBinCount));
   const time = useRef(new Uint8Array(analyzer.frequencyBinCount));
 
   useAnimationFrame(() => {
-    if (context.state !== 'suspended') {
+    if (analyzer.context.state !== 'suspended') {
       analyzer.getByteFrequencyData(freq.current); // <-- bar chart
       analyzer.getByteTimeDomainData(time.current); // <-- waveform
     }
@@ -62,14 +61,13 @@ export interface LevelData {
   volume: number;
 }
 
-export const useLevelData = (cb: (data: LevelData) => void) => {
-  const { analyzer, context, } = useAudioAnalyzer();
-  const { freq, } = useFreqTimeData();
+export const useLevelData = (analyzer: AnalyserNode, cb: (data: LevelData) => void) => {
+  const { freq, } = useFreqTimeData(analyzer);
   /** 32 bins per level for  16 levels, 512 bins */
   const binsPerLevel = Math.floor(analyzer.frequencyBinCount / LEVELS_COUNT);
 
   useAnimationFrame(() => {
-    if (context.state === 'suspended') return;
+    if (analyzer.context.state === 'suspended') return;
 
     const data: number[] = [];
 
@@ -90,11 +88,11 @@ export const useLevelData = (cb: (data: LevelData) => void) => {
   });
 };
 
-export const useBeat = (cb: (data: LevelData) => void) => {
+export const useBeat = (analyzer: AnalyserNode, cb: (data: LevelData) => void) => {
   const beatCutOff = useRef(0);
   const beatTime = useRef(0);
 
-  useLevelData(({ levels, volume, }) => {
+  useLevelData(analyzer, ({ levels, volume, }) => {
     if (volume > beatCutOff.current && volume > BEAT_MIN) {
       cb({ levels, volume, });
       beatCutOff.current = volume * 1.1;

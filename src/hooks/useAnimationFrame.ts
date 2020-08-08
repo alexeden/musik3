@@ -1,11 +1,13 @@
 import { useEffect, useRef, } from 'react';
 
 export const useAnimationFrame = (cb: FrameRequestCallback, cleanup?: () => void) => {
-  const stopRef = useRef(false);
   useEffect(() => {
+    // const stopRef = useRef(false);
+    let stop = false;
+
     const next = (t: number) => {
       cb(t);
-      if (!stopRef.current) requestAnimationFrame(next);
+      if (!stop) requestAnimationFrame(next);
     };
 
     next(performance.now());
@@ -13,7 +15,7 @@ export const useAnimationFrame = (cb: FrameRequestCallback, cleanup?: () => void
     return () => {
       cleanup?.();
       console.log('useAnimationFrame has is cleaning up'); // eslint-disable-line
-      stopRef.current = true;
+      stop = true;
     };
   }, [ cb, cleanup, ]);
 };
