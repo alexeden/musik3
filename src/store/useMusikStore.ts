@@ -1,23 +1,22 @@
 import * as THREE from 'three';
 import create from 'zustand';
 
-export type MusikState = {
+export type MusikState = Readonly<{
   analyzer: AnalyserNode;
   audioBuffer: AudioBuffer | null;
   clock: THREE.Clock;
-  // context: AudioContext;
   isPlaying: boolean;
   actions: {
-    connectSource: (buffer: AudioBuffer) => AudioBufferSourceNode;
-    play: () => void;
+    // connectSource: (buffer: AudioBuffer) => AudioBufferSourceNode;
+    play: (buffer: AudioBuffer) => Promise<void>;
     pause: () => void;
   };
-};
+}>;
 
 export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) => {
   const context = new AudioContext();
   const analyzer = context.createAnalyser();
-  analyzer.smoothingTimeConstant = 0.3; // smooths out bar chart movement over time
+  analyzer.smoothingTimeConstant = 0; // smooths out bar chart movement over time
   analyzer.fftSize = 1024;
   analyzer.connect(context.destination);
 
@@ -31,19 +30,13 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
     analyzer,
     audioBuffer: null,
     clock: new THREE.Clock(),
-    // context,
     isPlaying: false,
     actions: {
-      connectSource: buffer => {
+      play: async buffer => {
         source?.disconnect();
         source = context.createBufferSource();
         source.buffer = buffer;
         source.connect(analyzer);
-        return source;
-      },
-      play: async () => {
-        if (!source?.buffer) return;
-        get().actions.connectSource(source?.buffer);
         source.start();
         return context.resume();
       },

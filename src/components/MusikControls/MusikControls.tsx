@@ -6,15 +6,17 @@ import SelectSong, { SONGS, } from '../SelectSong';
 export const MusikControls: React.FC = () => {
   const styles = useStyles();
   const audioLoader = useAudioLoaderStore();
-  const musikActions = useMusikStore(store => store.actions);
   const isPlaying = useMusikStore(state => state.isPlaying);
-  const { pause, play, } = useMusikStore(store => store.actions);
+  const [ isLoading, setIsLoading, ] = useState(false);
+  const play = useMusikStore(store => store.actions.play);
   const [ selectedSong, setSelectedSong, ] = useState(SONGS[0]);
 
-  const load = useCallback(async () => {
-    const buffer = await audioLoader.fetchAudioBuffer('/sine-from-above.mp3');
-    musikActions.connectSource(buffer);
-  }, [ audioLoader, musikActions, ]);
+  const loadAndPlay = useCallback(async (url: string) => {
+    setIsLoading(true);
+    const buffer = await audioLoader.fetchAudioBuffer(url);
+    await play(buffer);
+    setIsLoading(false);
+  }, [ audioLoader, play, ]);
 
   return (
     <div className={'fixed flex flex-row inset-0 z-10 items-center justify-center pointer-events-none'}>
@@ -27,16 +29,18 @@ export const MusikControls: React.FC = () => {
           </div>
 
           <div className={`${styles.controlFormWrapper}`}>
-            <SelectSong
-              onChange={song => setSelectedSong(song)}
-              song={selectedSong}
-            />
-            <div className={'flex flex-row justify-between'}>
-              <button className="text-2xl" onClick={load}>
-                {audioLoader.isLoading ? '...' : 'Load'}
-              </button>
-              <button className="text-2xl" onClick={() => play()}>Play</button>
-            </div>
+            {!isLoading && (
+              <>
+                <SelectSong
+                  onChange={song => setSelectedSong(song)}
+                  song={selectedSong}
+                />
+                <div className={'flex flex-row justify-center'}>
+                  <button className="text-2xl" onClick={() => loadAndPlay(selectedSong.path)}>Play</button>
+                </div>
+              </>
+            )}
+            {isLoading && <h5 className="text-3xl text-center">Loading</h5>}
           </div>
         </div>
       )}
@@ -57,11 +61,13 @@ const controlBlockBackdrop = (backdropFilter: string) => ({
 const useStyles = createUseStyles({
   controlWrapper: {
     minHeight: '450px',
+    boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.5)',
     composes: [ 'flex', 'flex-row', 'pointer-events-auto', ],
   },
   controlFormWrapper: {
     margin: '2rem',
-    composes: [ 'flex', 'flex-col', 'relative', ],
+    width: '400px',
+    composes: [ 'flex', 'flex-col', 'justify-around', 'align-center', 'relative', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(20deg)'), },
   },
   controlHeaderWrapper: (props: any) => ({
