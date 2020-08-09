@@ -7,7 +7,6 @@ export type MusikState = Readonly<{
   clock: THREE.Clock;
   isPlaying: boolean;
   actions: {
-    // connectSource: (buffer: AudioBuffer) => AudioBufferSourceNode;
     play: (buffer: AudioBuffer) => Promise<void>;
     pause: () => void;
   };
@@ -20,11 +19,11 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
   analyzer.fftSize = 1024;
   analyzer.connect(context.destination);
 
-  context.addEventListener('statechange', () => {
-    set({ isPlaying: context.state === 'running', });
-  });
-
   let source: AudioBufferSourceNode | null = null;
+
+  context.addEventListener('statechange', () => {
+    set({ isPlaying: context.state === 'running' && !!source?.buffer, });
+  });
 
   return {
     analyzer,
@@ -33,6 +32,7 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
     isPlaying: false,
     actions: {
       play: async buffer => {
+        await context.suspend();
         source?.disconnect();
         source = context.createBufferSource();
         source.buffer = buffer;

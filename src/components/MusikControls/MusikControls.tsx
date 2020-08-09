@@ -73,10 +73,14 @@ const useStyles = createUseStyles({
     width: '210px',
     composes: [ 'relative', 'select-none', 'hidden', 'md:block', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(-20deg)'), },
+    '& *': {
+      textShadow: '1rem 1px rgba(255, 255, 255, 0.4)',
+    },
   }),
   controlHeaderText: {
     bottom: '50%',
     fontSize: '4rem',
+    fontWeight: '900',
     height: '0',
     left: '-75px',
     letterSpacing: '-1px',

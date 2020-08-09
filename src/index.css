@@ -1,5 +1,3 @@
-/* Use baumans for body font */
-
 * {
   box-sizing: border-box;
   position: relative;
@@ -30,7 +28,6 @@ body, #root {
 h1, h2, h3, h4, h5, h6,
 h1 *, h2 *, h3 *, h4 *, h5 *, h6 * {
   font-family: 'MuseoModerno';
-  font-weight: 900;
   letter-spacing: 3px;
 }
 
@@ -60,12 +57,12 @@ label, button {
   src: url('/assets/MuseoModerno-Thin.ttf');
 }
 
-@font-face {
+/* @font-face {
   font-family: 'MuseoModerno';
   font-style: normal;
   font-weight: 200;
   src: url('/assets/MuseoModerno-ExtraLight.ttf');
-}
+} */
 
 @font-face {
   font-family: 'MuseoModerno';
@@ -74,7 +71,7 @@ label, button {
   src: url('/assets/MuseoModerno-Light.ttf');
 }
 
-@font-face {
+/* @font-face {
   font-family: 'MuseoModerno';
   font-style: normal;
   font-weight: 400;
@@ -93,9 +90,9 @@ label, button {
   font-style: normal;
   font-weight: 600;
   src: url('/assets/MuseoModerno-SemiBold.ttf');
-}
+} */
 
-@font-face {
+/* @font-face {
   font-family: 'MuseoModerno';
   font-style: normal;
   font-weight: 700;
@@ -107,7 +104,7 @@ label, button {
   font-style: normal;
   font-weight: 800;
   src: url('/assets/MuseoModerno-ExtraBold.ttf');
-}
+} */
 
 @font-face {
   font-family: 'MuseoModerno';
