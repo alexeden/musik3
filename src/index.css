@@ -27,16 +27,14 @@ body, #root {
   position: relative;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Monoton';
-  /* font-weight: 900; */
+h1, h2, h3, h4, h5, h6,
+h1 *, h2 *, h3 *, h4 *, h5 *, h6 * {
+  font-family: 'MuseoModerno';
+  font-weight: 900;
+  letter-spacing: 3px;
 }
 
-h1 {
-  letter-spacing: 10px;
-}
-
-label {
+label, button {
   font-family: 'MuseoModerno';
   font-weight: 900;
 }

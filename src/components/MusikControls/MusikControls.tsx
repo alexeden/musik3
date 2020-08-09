@@ -11,8 +11,40 @@ const useStyles = createUseStyles({
   controlWrapper: {
     backdropFilter: 'blur(10px) brightness(5%) saturate(50) hue-rotate(60deg)',
     pointerEvents: 'all',
+    minHeight: '450px',
   },
-  controlHeader: {
+  controlHeaderWrapper: {
+    position: 'relative',
+    height: '350px',
+    width: '210px',
+    userSelect: 'none',
+  },
+  controlHeaderText: {
+    position: 'absolute',
+    height: '0',
+    lineHeight: '0',
+    top: '50%',
+    bottom: '50%',
+    width: '100%',
+    textAlign: 'center',
+    transform: 'rotate(-90deg)',
+    left: '-75px',
+    fontSize: '4rem',
+    letterSpacing: '-1px'
+    // backdropFilter: 'blur(10px) saturate(50) hue-rotate(45deg)',
+    // pointerEvents: 'all',
+  },
+  controlHeaderIcon: {
+    position: 'absolute',
+    height: '0',
+    lineHeight: '0',
+    top: '50%',
+    left: '25px',
+    fontWeight: '300',
+    bottom: '50%',
+    transform: 'rotate(90deg)',
+    fontSize: '12rem',
+    // transform: 'rotate(-90deg)',
     // backdropFilter: 'blur(10px) saturate(50) hue-rotate(45deg)',
     // pointerEvents: 'all',
   },
@@ -35,16 +67,26 @@ export const MusikControls: React.FC = () => {
     <div className={`fixed flex flex-row inset-0 z-10 items-center justify-center ${styles.controlBackdrop}`}>
 
       {!isPlaying && (
-        <div className={`flex flex-col space-y-32 p-32 ${styles.controlWrapper}`}>
-          <h1 className={`text-6xl text-center ${styles.controlHeader}`}>MUSIK3</h1>
+        <div className={`flex flex-row space-x-32 p-16 ${styles.controlWrapper}`}>
+          <div className={`${styles.controlHeaderWrapper}`}>
+            <h1 className={`text-6xl ${styles.controlHeaderText}`}>
+              musik
+            </h1>
+            <h1 className={`${styles.controlHeaderIcon}`}>
+              M
+            </h1>
+          </div>
           <SelectSong
             onChange={song => setSelectedSong(song)}
             song={selectedSong}
           />
-          <button onClick={load}>
-            {audioLoader.isLoading ? '...' : 'Load'}
-          </button>
-          <button className="white" onClick={() => play()}>Play</button>
+          <div className={'flex flex-row justify-between'}>
+            <button className="text-2xl" onClick={load}>
+              {audioLoader.isLoading ? '...' : 'Load'}
+            </button>
+            <button className="text-2xl" onClick={() => play()}>Play</button>
+
+          </div>
         </div>
       )}
     </div>
