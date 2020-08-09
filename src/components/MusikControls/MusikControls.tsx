@@ -20,7 +20,6 @@ export const MusikControls: React.FC = () => {
 
   return (
     <div className={'fixed flex flex-row inset-0 z-10 items-center justify-center pointer-events-none'}>
-
       {!isPlaying && (
         <div className={styles.controlWrapper}>
           <div className={styles.controlHeaderWrapper}>
@@ -66,14 +65,13 @@ const useStyles = createUseStyles({
   },
   controlFormWrapper: {
     margin: '2rem',
-    width: '400px',
     composes: [ 'flex', 'flex-col', 'justify-around', 'align-center', 'relative', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(20deg)'), },
   },
   controlHeaderWrapper: (props: any) => ({
     margin: '2rem',
     width: '210px',
-    composes: [ 'relative', 'select-none', ],
+    composes: [ 'relative', 'select-none', 'hidden', 'md:block', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(-20deg)'), },
   }),
   controlHeaderText: {
