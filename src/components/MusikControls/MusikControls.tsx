@@ -24,7 +24,7 @@ export const MusikControls: React.FC = () => {
         <div className={styles.controlWrapper}>
           <div className={styles.controlHeaderWrapper}>
             <h1 className={`${styles.controlHeaderText}`}>musik</h1>
-            <h1 className={`${styles.controlHeaderIcon}`}>M</h1> {/* It looks like a 3 I swear */}
+            <h1 className={`${styles.controlHeaderIcon}`}>3</h1> {/* It looks like a 3 I swear */}
           </div>
 
           <div className={`${styles.controlFormWrapper}`}>
@@ -93,13 +93,13 @@ const useStyles = createUseStyles({
   },
   controlHeaderIcon: {
     bottom: '50%',
-    fontSize: '12rem',
+    fontSize: '16rem',
     fontWeight: '300',
     height: '0',
-    left: '25px',
+    left: '50px',
     lineHeight: '0',
     position: 'absolute',
     top: '50%',
-    transform: 'rotate(90deg)',
+    transform: 'rotate(0deg)',
   },
 });
