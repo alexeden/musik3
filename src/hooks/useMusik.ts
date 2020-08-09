@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, } from 'react';
+import { useRef, } from 'react';
 import { useAnimationFrame, } from './useAnimationFrame';
 
 const LEVELS_COUNT = 16;
