@@ -3,38 +3,10 @@ import { useAnimationFrame, } from './useAnimationFrame';
 
 const LEVELS_COUNT = 16;
 const GAIN = 1.7;
-const BEAT_MIN = 0.15; // level less than this is no beat
+const BEAT_VOLUME_THRESHOLD = 0.55; // level less than this is no beat
 const BEAT_HOLD_TIME = 40;
 const BEAT_DECAY = 0.9;
 // const msecsAvg = 633; // time between beats (msec)
-
-const useAudioAnalyzer = (() => {
-  const context = new AudioContext();
-  const analyzer = context.createAnalyser();
-  analyzer.smoothingTimeConstant = 0.3; // smooths out bar chart movement over time
-  analyzer.fftSize = 1024;
-  return () => ({
-    analyzer,
-    context,
-  });
-})();
-
-const useAudioBufferSourceNode = () => {
-  const { analyzer, context, } = useAudioAnalyzer();
-  const sourceRef = useRef<AudioBufferSourceNode>(context.createBufferSource());
-
-  return {
-    source: sourceRef.current,
-    connect: (buffer: AudioBuffer) => {
-      sourceRef.current?.disconnect();
-      sourceRef.current = context.createBufferSource();
-      sourceRef.current.buffer = buffer;
-      sourceRef.current.connect(analyzer);
-      analyzer.connect(context.destination);
-      return sourceRef.current;
-    },
-  };
-};
 
 export const useFreqTimeData = (analyzer: AnalyserNode) => {
   const freq = useRef(new Uint8Array(analyzer.frequencyBinCount));
@@ -93,7 +65,7 @@ export const useBeat = (analyzer: AnalyserNode, cb: (data: LevelData) => void) =
   const beatTime = useRef(0);
 
   useLevelData(analyzer, ({ levels, volume, }) => {
-    if (volume > beatCutOff.current && volume > BEAT_MIN) {
+    if (volume > beatCutOff.current && volume > BEAT_VOLUME_THRESHOLD) {
       cb({ levels, volume, });
       beatCutOff.current = volume * 1.1;
       beatTime.current = 0;
@@ -103,29 +75,7 @@ export const useBeat = (analyzer: AnalyserNode, cb: (data: LevelData) => void) =
     }
     else {
       beatCutOff.current *= BEAT_DECAY;
-      beatCutOff.current = Math.max(beatCutOff.current, BEAT_MIN);
+      beatCutOff.current = Math.max(beatCutOff.current, BEAT_VOLUME_THRESHOLD);
     }
   });
-};
-
-export const useMusik = () => {
-  const { analyzer, context, } = useAudioAnalyzer();
-  // const { connect, } = useAudioBufferSourceNode();
-  // const [ isLoading, setIsLoading, ] = useState(false);
-  // const [ isPlaying, setIsPlaying, ] = useState(context.state === 'running');
-
-  // const onAudioBuffer = useCallback((buffer: AudioBuffer) => {
-  //   connect(buffer).start();
-  // }, [ connect, ]);
-
-  // context.onstatechange = () => {
-  //   setIsPlaying(context.state === 'running');
-  // };
-
-  return {
-    // isLoading,
-    // isPlaying,
-    play: () => context.resume(),
-    pause: () => context.suspend(),
-  };
 };
