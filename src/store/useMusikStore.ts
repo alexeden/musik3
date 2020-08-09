@@ -5,7 +5,7 @@ export type MusikState = {
   analyzer: AnalyserNode;
   audioBuffer: AudioBuffer | null;
   clock: THREE.Clock;
-  context: AudioContext;
+  // context: AudioContext;
   isPlaying: boolean;
   actions: {
     connectSource: (buffer: AudioBuffer) => AudioBufferSourceNode;
@@ -31,7 +31,7 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
     analyzer,
     audioBuffer: null,
     clock: new THREE.Clock(),
-    context,
+    // context,
     isPlaying: false,
     actions: {
       connectSource: buffer => {

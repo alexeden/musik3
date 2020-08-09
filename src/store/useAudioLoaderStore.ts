@@ -13,7 +13,7 @@ export const [ useAudioLoaderStore, audioLoaderApi, ] = create<AudioLoaderState>
 
     return fetch(url)
       .then(response => response.arrayBuffer())
-      .then(buffer => musikApi.getState().context.decodeAudioData(buffer))
+      .then(buffer => musikApi.getState().analyzer.context.decodeAudioData(buffer))
       .finally(() => set(() => ({ isLoading: false, })));
   },
 }));

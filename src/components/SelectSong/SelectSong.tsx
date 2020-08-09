@@ -2,10 +2,20 @@
 import React from 'react';
 
 type Props = {
-
+  onChange: (song: Song) => void;
+  song: Song;
 };
 
-const SONGS = [
+type Song = {
+  name: string;
+  path: string;
+};
+
+export const SONGS: Song[] = [
+  {
+    name: 'Lady Gaga ft. Elton John - Sine from Above',
+    path: '/sine-from-above.mp3',
+  },
   {
     name: `CamelPhat - Rabbit Hole`,
     path: '/rabbit-hole.mp3',
@@ -31,25 +41,26 @@ const SONGS = [
     path: '/magic.mp3',
   },
   {
-    name: 'Lady Gaga ft. Elton John - Sine from Above',
-    path: '/sine-from-above.mp3',
-  },
-  {
     name: 'Dua Lipa - Hallucinate',
     path: '/hallucinate.mp3',
   },
 ];
 
-export const SelectSong: React.FC<Props> = ({
-
-}) => (
-  <div>
-    <select>
-      {
-        SONGS.map(song => (
-          <option key={song.path} value={song.path}>{song.name}</option>
-        ))
-      }
+export const SelectSong: React.FC<Props> = ({ onChange, song, }) => (
+  <div className="flex flex-col items-center space-y-3">
+    <label htmlFor="select-song">Select a song</label>
+    <select
+      id="select-song"
+      className="bg-transparent p-3 text-center"
+      style={{
+        appearance: 'none',
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        cursor: 'pointer',
+      }}
+      onChange={e => onChange(SONGS.find(s => s.path === e.currentTarget.value)!)}
+      placeholder={song.name}
+    >
+      { SONGS.map(opt => (<option key={opt.path} value={opt.path}>{opt.name}</option>)) }
     </select>
   </div>
 );
