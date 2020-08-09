@@ -1,6 +1,14 @@
+/* Use baumans for body font */
+
 * {
   box-sizing: border-box;
   position: relative;
+  font-family: 'Baumans';
+  outline: none !important;
+
+}
+*:focus {
+  outline: none !important;
 }
 
 body {
@@ -19,8 +27,93 @@ body, #root {
   position: relative;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Monoton';
+  /* font-weight: 900; */
+}
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+h1 {
+  letter-spacing: 10px;
+}
+
+label {
+  font-family: 'MuseoModerno';
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: 'Baumans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/Baumans-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Monoton';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/Monoton-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 100;
+  src: url('/assets/MuseoModerno-Thin.ttf');
+}
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 200;
+  src: url('/assets/MuseoModerno-ExtraLight.ttf');
+}
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/assets/MuseoModerno-Light.ttf');
+}
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/assets/MuseoModerno-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/assets/MuseoModerno-Medium.ttf');
+}
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/assets/MuseoModerno-SemiBold.ttf');
+}
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/assets/MuseoModerno-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 800;
+  src: url('/assets/MuseoModerno-ExtraBold.ttf');
+}
+
+@font-face {
+  font-family: 'MuseoModerno';
+  font-style: normal;
+  font-weight: 900;
+  src: url('/assets/MuseoModerno-Black.ttf');
 }
