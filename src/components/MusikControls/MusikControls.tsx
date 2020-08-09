@@ -20,13 +20,13 @@ export const MusikControls: React.FC = () => {
     <div className={'fixed flex flex-row inset-0 z-10 items-center justify-center pointer-events-none'}>
 
       {!isPlaying && (
-        <div className={`flex flex-row pointer-events-auto ${styles.controlWrapper}`}>
-          <div className={`relative select-none ${styles.controlHeaderWrapper}`}>
+        <div className={styles.controlWrapper}>
+          <div className={styles.controlHeaderWrapper}>
             <h1 className={`${styles.controlHeaderText}`}>musik</h1>
             <h1 className={`${styles.controlHeaderIcon}`}>M</h1> {/* It looks like a 3 I swear */}
           </div>
 
-          <div className={`flex flex-col relative ${styles.controlFormWrapper}`}>
+          <div className={`${styles.controlFormWrapper}`}>
             <SelectSong
               onChange={song => setSelectedSong(song)}
               song={selectedSong}
@@ -57,14 +57,17 @@ const controlBlockBackdrop = (backdropFilter: string) => ({
 const useStyles = createUseStyles({
   controlWrapper: {
     minHeight: '450px',
+    composes: [ 'flex', 'flex-row', 'pointer-events-auto', ],
   },
   controlFormWrapper: {
     margin: '2rem',
+    composes: [ 'flex', 'flex-col', 'relative', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(20deg)'), },
   },
   controlHeaderWrapper: (props: any) => ({
     margin: '2rem',
     width: '210px',
+    composes: [ 'relative', 'select-none', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(-20deg)'), },
   }),
   controlHeaderText: {
