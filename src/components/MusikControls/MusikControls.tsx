@@ -26,11 +26,11 @@ export const MusikControls: React.FC = () => {
     <div className={'fixed flex flex-row inset-0 z-10 items-center justify-center pointer-events-none'}>
       {!isPlaying && !isLoading && (
         <div className={styles.controlWrapper} >
-          <div className={styles.controlHeaderWrapper}>
-            <h1 className={`${styles.controlHeaderText}`}>musik</h1>
-            <h1 className={`${styles.controlHeaderIcon}`}>3</h1>
+          <div className={styles.headerWrapper}>
+            <h1 className={`${styles.headerText}`}>musik</h1>
+            <h1 className={`${styles.headerIcon}`}>3</h1>
           </div>
-          <div className={`${styles.controlFormWrapper}`}>
+          <div className={`${styles.formWrapper}`}>
             <div className="flex flex-col items-start space-y-8">
               <div className="flex flex-col space-y-2">
                 <SelectSong
@@ -59,6 +59,18 @@ export const MusikControls: React.FC = () => {
               )}
             </div>
           </div>
+        </div>
+      )}
+      {!isPlaying && (
+        <div className={styles.footer}>
+          <a
+            className="text-white"
+            rel="noopener noreferrer"
+            target="_blank"
+            href="https://github.com/alexeden/musik3"
+          >
+            Code ↗
+          </a>
         </div>
       )}
       {isLoading && (
@@ -92,7 +104,30 @@ const useStyles = createUseStyles({
     boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.5)',
     composes: [ 'p-16', ],
   },
-  controlFormWrapper: {
+  footer: {
+    composes: [ 'absolute', 'flex', 'flex-row', 'inset-x-0', 'items-center', 'justify-center', 'pointer-events-auto', ],
+    bottom: '0.5rem',
+    '& a': {
+      alignItems: 'center',
+      backdropFilter: 'blur(10px) brightness(5%) saturate(50) hue-rotate(20deg)',
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      borderRadius: '50%',
+      boxShadow: '0px 0px 0.5rem 1px rgba(255, 255, 255, 0.2)',
+      color: '#ffffff',
+      display: 'flex',
+      fontFamily: 'MuseoModerno',
+      fontSize: '1.25rem',
+      fontWeight: '900',
+      height: '100px',
+      justifyContent: 'center',
+      width: '100px',
+    },
+    '& a:hover': {
+      backdropFilter: 'saturate(50) hue-rotate(-20deg)',
+      boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.2)',
+    },
+  },
+  formWrapper: {
     margin: '2rem',
     composes: [ 'flex', 'flex-col', 'justify-around', 'align-center', 'relative', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(20deg)'), },
@@ -113,13 +148,13 @@ const useStyles = createUseStyles({
       boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.2)',
     },
   },
-  controlHeaderWrapper: (props: any) => ({
+  headerWrapper: {
     margin: '2rem',
     width: '210px',
     composes: [ 'relative', 'select-none', 'hidden', 'md:block', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(-20deg)'), },
-  }),
-  controlHeaderText: {
+  },
+  headerText: {
     bottom: '50%',
     fontSize: '4rem',
     fontWeight: '900',
@@ -134,7 +169,7 @@ const useStyles = createUseStyles({
     transform: 'rotate(-90deg)',
     width: '100%',
   },
-  controlHeaderIcon: {
+  headerIcon: {
     bottom: '50%',
     fontSize: '16rem',
     fontWeight: '300',
