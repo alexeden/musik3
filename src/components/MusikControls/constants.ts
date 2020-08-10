@@ -36,11 +36,6 @@ export const SONGS: Song[] = [
     name: 'Big Love',
     path: '/big-love.mp3',
   },
-  // {
-  //   artist: 'Matroda',
-  //   name: 'You Can',
-  //   path: '/you-can.mp3',
-  // },
   {
     artist: 'Passion Pit',
     name: 'Sleepyhead',
