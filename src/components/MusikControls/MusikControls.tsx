@@ -23,10 +23,7 @@ export const MusikControls: React.FC = () => {
   return (
     <div className={'fixed flex flex-row inset-0 z-10 items-center justify-center pointer-events-none'}>
       {!isPlaying && !isLoading && (
-        <div
-          className={styles.controlWrapper}
-          style={{ minHeight: isLoading ? '0' : '450px', }}
-        >
+        <div className={styles.controlWrapper} >
           <div className={styles.controlHeaderWrapper}>
             <h1 className={`${styles.controlHeaderText}`}>musik</h1>
             <h1 className={`${styles.controlHeaderIcon}`}>3</h1>
@@ -36,7 +33,7 @@ export const MusikControls: React.FC = () => {
               <div className="flex flex-col space-y-2">
                 <SelectSong
                   onChange={song => setSelectedSong(song)}
-                  song={selectedSong}
+                  value={selectedSong}
                 />
               </div>
               <UploadAudio
@@ -76,6 +73,7 @@ const controlBlockBackdrop = (backdropFilter: string) => ({
 const useStyles = createUseStyles({
   controlWrapper: {
     boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.5)',
+    minHeight: '400px',
     composes: [ 'flex', 'flex-row', 'pointer-events-auto', ],
   },
   loadingWrapper: {
@@ -100,7 +98,7 @@ const useStyles = createUseStyles({
     justifyContent: 'center',
     width: '100px',
     '&:hover': {
-      backdropFilter: 'saturate(5000) hue-rotate(-20deg)',
+      backdropFilter: 'saturate(50) hue-rotate(-20deg)',
       backgroundColor: 'rgba(0, 0, 0, 0.1)',
       boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.2)',
     },
@@ -110,20 +108,18 @@ const useStyles = createUseStyles({
     width: '210px',
     composes: [ 'relative', 'select-none', 'hidden', 'md:block', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(-20deg)'), },
-    '& *': {
-      textShadow: '1rem 1px rgba(255, 255, 255, 0.4)',
-    },
   }),
   controlHeaderText: {
     bottom: '50%',
     fontSize: '4rem',
     fontWeight: '900',
     height: '0',
-    left: '-75px',
+    left: '-60px',
     letterSpacing: '-1px',
     lineHeight: '0',
     position: 'absolute',
     textAlign: 'center',
+    textShadow: '1rem 1px rgba(255, 255, 255, 0.4)',
     top: '50%',
     transform: 'rotate(-90deg)',
     width: '100%',
@@ -133,9 +129,10 @@ const useStyles = createUseStyles({
     fontSize: '16rem',
     fontWeight: '300',
     height: '0',
-    left: '50px',
+    left: '60px',
     lineHeight: '0',
     position: 'absolute',
+    textShadow: '1px 1rem rgba(255, 255, 255, 0.4)',
     top: '50%',
     transform: 'rotate(0deg)',
   },

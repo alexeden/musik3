@@ -1,18 +1,31 @@
 /* eslint-disable quotes */
-import React, { useRef, } from 'react';
+import React, { useRef, useMemo, } from 'react';
 import { createUseStyles, } from 'react-jss';
 import { Song, } from './types';
 import { SONGS, } from './constants';
 
 type Props = {
   onChange: (song: Song) => void;
-  song: Song;
+  value: Song;
 };
 
-export const SelectSong: React.FC<Props> = ({ onChange, song, }) => {
+export const SelectSong: React.FC<Props> = ({ onChange, value, }) => {
   const styles = useStyles();
   const selectRef = useRef<HTMLSelectElement | null>(null);
   ((window as any).selectRef = selectRef);
+
+  const options = useMemo(() => {
+    const songNames = SONGS.map(s => s.name);
+    // If the selected song isn't in `SONGS`, then it's a user upload and needs to be added
+    // to the list of song options
+    const songIsUserAdded = !songNames.includes(value.name);
+    const songs = songIsUserAdded ? [ value, ...SONGS, ] : SONGS;
+    return songs.map(s => (
+      <option key={s.name} value={s.name} >
+        {songIsUserAdded ? s.name : `${s.artist} - ${s.name}`}
+      </option>
+    ));
+  }, [ value, ]);
 
   return (
     <>
@@ -22,13 +35,12 @@ export const SelectSong: React.FC<Props> = ({ onChange, song, }) => {
         id="select-song"
         name="select-song"
         onChange={e => onChange(SONGS.find(s => s.name === e.currentTarget.value)!)}
-        placeholder={song.name}
+        placeholder={value.name}
         ref={selectRef}
-        value={song.name}
+        value={value.name}
+        // value="2"
       >
-        {SONGS.map(opt => (
-          <option key={opt.name} value={opt.name}>{opt.artist} - {opt.name}</option>
-        ))}
+        {options}
       </select>
     </>
   );
@@ -41,9 +53,11 @@ const useStyles = createUseStyles({
     cursor: 'pointer',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     boxShadow: '0px 0px 0.5rem 1px rgba(255, 255, 255, 0.2)',
+    maxWidth: 'calc(100vw - 8rem)',
+    width: '300px',
 
     '&:hover': {
-      backdropFilter: 'saturate(5000) hue-rotate(-20deg)',
+      backdropFilter: 'saturate(50) hue-rotate(-20deg)',
       boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.2)',
       backgroundColor: 'rgba(0, 0, 0, 0.1)',
     },
