@@ -10,7 +10,7 @@ export const MusikControls: React.FC = () => {
   const audioLoader = useAudioLoaderStore();
   const isPlaying = useMusikStore(state => state.isPlaying);
   const [ isLoading, setIsLoading, ] = useState(false);
-  const play = useMusikStore(store => store.actions.playBuffer);
+  const play = useMusikStore(store => store.actions.play);
   const [ selectedSong, setSelectedSong, ] = useState(SONGS[0]);
 
   const loadAndPlay = useCallback(async (url: string) => {
@@ -22,39 +22,41 @@ export const MusikControls: React.FC = () => {
 
   return (
     <div className={'fixed flex flex-row inset-0 z-10 items-center justify-center pointer-events-none'}>
-      {!isPlaying && (
-        <div className={styles.controlWrapper}>
+      {!isPlaying && !isLoading && (
+        <div
+          className={styles.controlWrapper}
+          style={{ minHeight: isLoading ? '0' : '450px', }}
+        >
           <div className={styles.controlHeaderWrapper}>
             <h1 className={`${styles.controlHeaderText}`}>musik</h1>
             <h1 className={`${styles.controlHeaderIcon}`}>3</h1>
           </div>
-
           <div className={`${styles.controlFormWrapper}`}>
-            {!isLoading && (
-              <>
-                <div className="flex flex-col items-start space-y-8">
-                  <div className="flex flex-col space-y-2">
-                    <SelectSong
-                      onChange={song => setSelectedSong(song)}
-                      song={selectedSong}
-                    />
-                  </div>
-                  <UploadAudio
-                    onChange={setSelectedSong}
-                  />
-                </div>
-                <div className={'flex flex-row justify-center'}>
-                  <button
-                    className={styles.playButton}
-                    onClick={() => loadAndPlay(selectedSong.path)}
-                  >
-                      Play
-                  </button>
-                </div>
-              </>
-            )}
-            {isLoading && <h5 className="text-3xl text-center">Loading</h5>}
+            <div className="flex flex-col items-start space-y-8">
+              <div className="flex flex-col space-y-2">
+                <SelectSong
+                  onChange={song => setSelectedSong(song)}
+                  song={selectedSong}
+                />
+              </div>
+              <UploadAudio
+                onChange={setSelectedSong}
+              />
+            </div>
+            <div className={'flex flex-row justify-center'}>
+              <button
+                className={styles.playButton}
+                onClick={() => loadAndPlay(selectedSong.path)}
+              >
+                Play
+              </button>
+            </div>
           </div>
+        </div>
+      )}
+      {isLoading && (
+        <div className={styles.loadingWrapper}>
+          <h5 className="text-3xl text-center">Loading</h5>
         </div>
       )}
     </div>
@@ -73,9 +75,14 @@ const controlBlockBackdrop = (backdropFilter: string) => ({
 
 const useStyles = createUseStyles({
   controlWrapper: {
-    minHeight: '450px',
     boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.5)',
     composes: [ 'flex', 'flex-row', 'pointer-events-auto', ],
+  },
+  loadingWrapper: {
+    backdropFilter: 'blur(10px) brightness(5%) saturate(50) hue-rotate(20deg)',
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.5)',
+    composes: [ 'p-16', ],
   },
   controlFormWrapper: {
     margin: '2rem',

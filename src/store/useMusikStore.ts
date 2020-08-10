@@ -7,7 +7,7 @@ export type MusikState = Readonly<{
   clock: THREE.Clock;
   isPlaying: boolean;
   actions: {
-    playBuffer: (buffer: AudioBuffer) => Promise<void>;
+    play: (buffer: AudioBuffer) => Promise<void>;
     pause: () => void;
   };
 }>;
@@ -15,7 +15,7 @@ export type MusikState = Readonly<{
 export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) => {
   const context = new AudioContext();
   const analyzer = context.createAnalyser();
-  analyzer.smoothingTimeConstant = 0; // smooths out bar chart movement over time
+  analyzer.smoothingTimeConstant = 0.1;
   analyzer.fftSize = 1024;
   analyzer.connect(context.destination);
 
@@ -31,8 +31,7 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
     clock: new THREE.Clock(),
     isPlaying: false,
     actions: {
-
-      playBuffer: async buffer => {
+      play: async buffer => {
         await context.suspend();
         source?.disconnect();
         source = context.createBufferSource();

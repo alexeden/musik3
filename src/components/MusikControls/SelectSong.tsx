@@ -1,5 +1,5 @@
 /* eslint-disable quotes */
-import React from 'react';
+import React, { useRef, } from 'react';
 import { createUseStyles, } from 'react-jss';
 import { Song, } from './types';
 import { SONGS, } from './constants';
@@ -11,6 +11,8 @@ type Props = {
 
 export const SelectSong: React.FC<Props> = ({ onChange, song, }) => {
   const styles = useStyles();
+  const selectRef = useRef<HTMLSelectElement | null>(null);
+  ((window as any).selectRef = selectRef);
 
   return (
     <>
@@ -19,11 +21,13 @@ export const SelectSong: React.FC<Props> = ({ onChange, song, }) => {
         className={styles.selectInput}
         id="select-song"
         name="select-song"
-        onChange={e => onChange(SONGS.find(s => s.path === e.currentTarget.value)!)}
+        onChange={e => onChange(SONGS.find(s => s.name === e.currentTarget.value)!)}
         placeholder={song.name}
+        ref={selectRef}
+        value={song.name}
       >
         {SONGS.map(opt => (
-          <option key={opt.path} value={opt.path}>{opt.artist} - {opt.name}</option>
+          <option key={opt.name} value={opt.name}>{opt.artist} - {opt.name}</option>
         ))}
       </select>
     </>

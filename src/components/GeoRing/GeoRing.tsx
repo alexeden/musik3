@@ -59,7 +59,7 @@ export const GeoRing: React.FC = () => {
     <group ref={groupRef}>
       <mesh
         material={material}
-        rotation-y={Math.PI / 2}
+        // Don't rotate, show the triangle on first load
       >
         <ringBufferGeometry attach="geometry" args={[ radiusIn, radiusOut, 3, 1, 0, Math.PI * 2, ]} />
       </mesh>
