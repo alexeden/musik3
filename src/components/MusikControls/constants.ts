@@ -27,14 +27,24 @@ export const SONGS: Song[] = [
     path: '/hallucinate.mp3',
   },
   {
-    artist: 'Habstrakt & Marten Hørger',
-    name: 'Ya Think',
-    path: '/ya-think.mp3',
+    artist: 'Knife Party',
+    name: 'Begin Again',
+    path: '/begin-again.mp3',
   },
   {
-    artist: 'Matroda',
-    name: 'You Can',
-    path: '/you-can.mp3',
+    artist: 'Louis The Child, EARTHGANG',
+    name: 'Big Love',
+    path: '/big-love.mp3',
+  },
+  // {
+  //   artist: 'Matroda',
+  //   name: 'You Can',
+  //   path: '/you-can.mp3',
+  // },
+  {
+    artist: 'Passion Pit',
+    name: 'Sleepyhead',
+    path: '/sleepyhead.mp3',
   },
   {
     artist: 'Sleepy Tom',
