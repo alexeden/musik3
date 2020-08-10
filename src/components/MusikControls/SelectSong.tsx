@@ -1,8 +1,8 @@
-/* eslint-disable quotes */
 import React, { useRef, useMemo, } from 'react';
 import { createUseStyles, } from 'react-jss';
 import { Song, } from './types';
 import { SONGS, } from './constants';
+import { squareButton, } from './styles';
 
 type Props = {
   onChange: (song: Song) => void;
@@ -13,7 +13,6 @@ export const SelectSong: React.FC<Props> = ({ onChange, value, }) => {
   const styles = useStyles();
   const inputRef = useRef<HTMLInputElement>(null);
   const selectRef = useRef<HTMLSelectElement | null>(null);
-  ((window as any).selectRef = selectRef);
 
   const options = useMemo(() => {
     const songNames = SONGS.map(s => s.name);
@@ -67,7 +66,6 @@ export const SelectSong: React.FC<Props> = ({ onChange, value, }) => {
         type="file"
         value=""
       />
-
     </div>
   );
 };
@@ -92,20 +90,5 @@ const useStyles = createUseStyles({
       color: '#000000',
     },
   },
-  uploadButton: {
-    composes: [ 'p-2', ],
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    boxShadow: '0px 0px 0.5rem 1px rgba(255, 255, 255, 0.2)',
-
-    '&:hover': {
-      backdropFilter: 'saturate(50) hue-rotate(-20deg)',
-      boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.2)',
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    },
-
-    '&:active': {
-      backgroundColor: '#ffffff',
-      color: '#000000',
-    },
-  },
+  uploadButton: { ...squareButton(), },
 });

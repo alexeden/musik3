@@ -3,6 +3,8 @@ import { createUseStyles, } from 'react-jss';
 import { useAudioLoaderStore, useMusikStore, } from '../../hooks';
 import { SONGS, } from './constants';
 import { SelectSong, } from './SelectSong';
+import { controlBlockBackdrop, squareButton, roundButton, } from './styles';
+import Branding from './Branding';
 
 export const MusikControls: React.FC = () => {
   const styles = useStyles();
@@ -24,10 +26,7 @@ export const MusikControls: React.FC = () => {
     <div className={'fixed flex flex-row inset-0 z-10 items-center justify-center pointer-events-none'}>
       {!isPlaying && !isLoading && (
         <div className={styles.controlWrapper} >
-          <div className={styles.headerWrapper}>
-            <h1 className={`${styles.headerText}`}>musik</h1>
-            <h1 className={`${styles.headerIcon}`}>3</h1>
-          </div>
+          <Branding />
           <div className={`${styles.formWrapper}`}>
             <div className="flex flex-col items-start space-y-8">
               <SelectSong onChange={song => setSelectedSong(song)} value={selectedSong} />
@@ -41,6 +40,11 @@ export const MusikControls: React.FC = () => {
                   Resume
                 </button>
               )}
+            </div>
+            <div className={'flex flex-row justify-around'}>
+              <button className={styles.useMicButton}>
+                Use Microphone
+              </button>
             </div>
           </div>
         </div>
@@ -66,16 +70,6 @@ export const MusikControls: React.FC = () => {
   );
 };
 
-const controlBlockBackdrop = (backdropFilter: string) => ({
-  backdropFilter: `${backdropFilter}`,
-  bottom: '-2rem',
-  content: '""',
-  left: '-2rem',
-  position: 'absolute',
-  right: '-2rem',
-  top: '-2rem',
-});
-
 const useStyles = createUseStyles({
   controlWrapper: {
     boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.5)',
@@ -91,78 +85,17 @@ const useStyles = createUseStyles({
   footer: {
     composes: [ 'absolute', 'flex', 'flex-row', 'inset-x-0', 'items-center', 'justify-center', 'pointer-events-auto', ],
     bottom: '0.5rem',
-    '& a': {
-      alignItems: 'center',
-      backdropFilter: 'blur(10px) brightness(5%) saturate(50) hue-rotate(20deg)',
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      borderRadius: '50%',
-      boxShadow: '0px 0px 0.5rem 1px rgba(255, 255, 255, 0.2)',
-      color: '#ffffff',
-      display: 'flex',
-      fontFamily: 'MuseoModerno',
-      fontSize: '1.25rem',
-      fontWeight: '900',
-      height: '100px',
-      justifyContent: 'center',
-      width: '100px',
-    },
-    '& a:hover': {
-      backdropFilter: 'saturate(50) hue-rotate(-20deg)',
-      boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.2)',
-    },
+    '& a': { ...roundButton(), },
   },
   formWrapper: {
     margin: '2rem',
-    composes: [ 'flex', 'flex-col', 'justify-around', 'align-center', 'relative', ],
+    composes: [ 'flex', 'flex-col', 'justify-around', 'align-center', 'relative', 'space-y-8', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(20deg)'), },
   },
   playButton: {
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    borderRadius: '50%',
-    boxShadow: '0px 0px 0.5rem 1px rgba(255, 255, 255, 0.2)',
-    composes: [ 'text-xl', 'relative', ],
-    display: 'flex',
-    height: '100px',
-    justifyContent: 'center',
-    width: '100px',
-    '&:hover': {
-      backdropFilter: 'saturate(50) hue-rotate(-20deg)',
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.2)',
-    },
+    ...roundButton(),
   },
-  headerWrapper: {
-    margin: '2rem',
-    width: '210px',
-    composes: [ 'relative', 'select-none', 'hidden', 'md:block', ],
-    '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(-20deg)'), },
-  },
-  headerText: {
-    bottom: '50%',
-    fontSize: '4rem',
-    fontWeight: '900',
-    height: '0',
-    left: '-60px',
-    letterSpacing: '-1px',
-    lineHeight: '0',
-    position: 'absolute',
-    textAlign: 'center',
-    textShadow: '1rem 1px rgba(255, 255, 255, 0.4)',
-    top: '50%',
-    transform: 'rotate(-90deg)',
-    width: '100%',
-  },
-  headerIcon: {
-    bottom: '50%',
-    fontSize: '16rem',
-    fontWeight: '300',
-    height: '0',
-    left: '60px',
-    lineHeight: '0',
-    position: 'absolute',
-    textShadow: '1px 1rem rgba(255, 255, 255, 0.4)',
-    top: '50%',
-    transform: 'rotate(0deg)',
+  useMicButton: {
+    ...squareButton(),
   },
 });
