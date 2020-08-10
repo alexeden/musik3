@@ -3,24 +3,22 @@ import { createUseStyles, } from 'react-jss';
 import { useAudioLoaderStore, useMusikStore, } from '../../hooks';
 import { SONGS, } from './constants';
 import { SelectSong, } from './SelectSong';
-import { UploadAudio, } from './UploadAudio';
 
 export const MusikControls: React.FC = () => {
   const styles = useStyles();
   const audioLoader = useAudioLoaderStore();
   const canResume = useMusikStore(state => state.canResume);
   const isPlaying = useMusikStore(state => state.isPlaying);
-  const resume = useMusikStore(state => state.actions.resume);
+  const { playBuffer, resume, } = useMusikStore(state => state.actions);
   const [ isLoading, setIsLoading, ] = useState(false);
-  const play = useMusikStore(store => store.actions.play);
   const [ selectedSong, setSelectedSong, ] = useState(SONGS[0]);
 
   const loadAndPlay = useCallback(async (url: string) => {
     setIsLoading(true);
     const buffer = await audioLoader.fetchAudioBuffer(url);
-    await play(buffer);
+    await playBuffer(buffer);
     setIsLoading(false);
-  }, [ audioLoader, play, ]);
+  }, [ audioLoader, playBuffer, ]);
 
   return (
     <div className={'fixed flex flex-row inset-0 z-10 items-center justify-center pointer-events-none'}>
@@ -32,28 +30,14 @@ export const MusikControls: React.FC = () => {
           </div>
           <div className={`${styles.formWrapper}`}>
             <div className="flex flex-col items-start space-y-8">
-              <div className="flex flex-col space-y-2">
-                <SelectSong
-                  onChange={song => setSelectedSong(song)}
-                  value={selectedSong}
-                />
-              </div>
-              <UploadAudio
-                onChange={setSelectedSong}
-              />
+              <SelectSong onChange={song => setSelectedSong(song)} value={selectedSong} />
             </div>
             <div className={'flex flex-row justify-around'}>
-              <button
-                className={styles.playButton}
-                onClick={() => loadAndPlay(selectedSong.path)}
-              >
+              <button className={styles.playButton} onClick={() => loadAndPlay(selectedSong.path)}>
                 Play
               </button>
               {canResume && (
-                <button
-                  className={styles.playButton}
-                  onClick={resume}
-                >
+                <button className={styles.playButton} onClick={resume}>
                   Resume
                 </button>
               )}

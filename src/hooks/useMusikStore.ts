@@ -6,7 +6,8 @@ export type MusikState = Readonly<{
   isPlaying: boolean;
   actions: {
     pause: () => void;
-    play: (buffer: AudioBuffer) => Promise<void>;
+    playBuffer: (buffer: AudioBuffer) => Promise<void>;
+    playStream: (buffer: AudioBuffer) => Promise<void>;
     resume: () => void;
   };
 }>;
@@ -32,7 +33,8 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
     canResume: false,
     isPlaying: false,
     actions: {
-      play: async buffer => {
+      pause: () => context.suspend(),
+      playBuffer: async buffer => {
         await context.suspend();
         source?.disconnect();
         source = context.createBufferSource();
@@ -41,7 +43,9 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
         source.start();
         return context.resume();
       },
-      pause: () => context.suspend(),
+      playStream: async () => {
+
+      },
       resume: () => context.resume(),
     },
   };

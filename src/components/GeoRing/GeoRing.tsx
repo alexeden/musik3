@@ -30,9 +30,7 @@ export const GeoRing: React.FC = () => {
     const shapes = (groupRef.current?.children ?? []) as Mesh[];
 
     shapes.forEach((shape, i) => {
-      // Incrementally move toward the target scale
-      // Increasing the denominator here will decrease the speed
-      // shape.scale.addScalar((volume - shape.scale.length()) / 3);
+      // Lerp towards the target scale
       shape.scale.setScalar(MathUtils.lerp(shape.scale.x, 3 * volume ** 4, 0.9));
     });
   });
