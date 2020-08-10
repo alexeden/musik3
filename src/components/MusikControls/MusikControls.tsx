@@ -1,8 +1,9 @@
 import React, { useCallback, useState, } from 'react';
 import { createUseStyles, } from 'react-jss';
 import { useAudioLoaderStore, useMusikStore, } from '../../store';
-import SelectSong, { SONGS, } from '../SelectSong';
-import UploadAudio from '../UploadAudio';
+import { SONGS, } from './constants';
+import { SelectSong, } from './SelectSong';
+import { UploadAudio, } from './UploadAudio';
 
 export const MusikControls: React.FC = () => {
   const styles = useStyles();
@@ -25,21 +26,30 @@ export const MusikControls: React.FC = () => {
         <div className={styles.controlWrapper}>
           <div className={styles.controlHeaderWrapper}>
             <h1 className={`${styles.controlHeaderText}`}>musik</h1>
-            <h1 className={`${styles.controlHeaderIcon}`}>3</h1> {/* It looks like a 3 I swear */}
+            <h1 className={`${styles.controlHeaderIcon}`}>3</h1>
           </div>
 
           <div className={`${styles.controlFormWrapper}`}>
             {!isLoading && (
               <>
-                <SelectSong
-                  onChange={song => setSelectedSong(song)}
-                  song={selectedSong}
-                />
-                <UploadAudio
-                  onChange={audio => console.log('UPLOAD!', audio)}
-                />
+                <div className="flex flex-col items-start space-y-8">
+                  <div className="flex flex-col space-y-2">
+                    <SelectSong
+                      onChange={song => setSelectedSong(song)}
+                      song={selectedSong}
+                    />
+                  </div>
+                  <UploadAudio
+                    onChange={setSelectedSong}
+                  />
+                </div>
                 <div className={'flex flex-row justify-center'}>
-                  <button className="text-2xl" onClick={() => loadAndPlay(selectedSong.path)}>Play</button>
+                  <button
+                    className={styles.playButton}
+                    onClick={() => loadAndPlay(selectedSong.path)}
+                  >
+                      Play
+                  </button>
                 </div>
               </>
             )}
@@ -71,6 +81,22 @@ const useStyles = createUseStyles({
     margin: '2rem',
     composes: [ 'flex', 'flex-col', 'justify-around', 'align-center', 'relative', ],
     '&:before': { ...controlBlockBackdrop('blur(10px) brightness(5%) saturate(50) hue-rotate(20deg)'), },
+  },
+  playButton: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: '50%',
+    boxShadow: '0px 0px 0.5rem 1px rgba(255, 255, 255, 0.2)',
+    composes: [ 'text-2xl', 'relative', ],
+    display: 'flex',
+    height: '100px',
+    justifyContent: 'center',
+    width: '100px',
+    '&:hover': {
+      backdropFilter: 'saturate(5000) hue-rotate(-20deg)',
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      boxShadow: '0px 0px 1rem 1px rgba(255, 255, 255, 0.2)',
+    },
   },
   controlHeaderWrapper: (props: any) => ({
     margin: '2rem',
