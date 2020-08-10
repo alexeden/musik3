@@ -2,13 +2,14 @@ import React, { useCallback, useState, } from 'react';
 import { createUseStyles, } from 'react-jss';
 import { useAudioLoaderStore, useMusikStore, } from '../../store';
 import SelectSong, { SONGS, } from '../SelectSong';
+import UploadAudio from '../UploadAudio';
 
 export const MusikControls: React.FC = () => {
   const styles = useStyles();
   const audioLoader = useAudioLoaderStore();
   const isPlaying = useMusikStore(state => state.isPlaying);
   const [ isLoading, setIsLoading, ] = useState(false);
-  const play = useMusikStore(store => store.actions.play);
+  const play = useMusikStore(store => store.actions.playBuffer);
   const [ selectedSong, setSelectedSong, ] = useState(SONGS[0]);
 
   const loadAndPlay = useCallback(async (url: string) => {
@@ -33,6 +34,9 @@ export const MusikControls: React.FC = () => {
                 <SelectSong
                   onChange={song => setSelectedSong(song)}
                   song={selectedSong}
+                />
+                <UploadAudio
+                  onChange={audio => console.log('UPLOAD!', audio)}
                 />
                 <div className={'flex flex-row justify-center'}>
                   <button className="text-2xl" onClick={() => loadAndPlay(selectedSong.path)}>Play</button>

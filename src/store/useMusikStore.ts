@@ -7,7 +7,7 @@ export type MusikState = Readonly<{
   clock: THREE.Clock;
   isPlaying: boolean;
   actions: {
-    play: (buffer: AudioBuffer) => Promise<void>;
+    playBuffer: (buffer: AudioBuffer) => Promise<void>;
     pause: () => void;
   };
 }>;
@@ -31,7 +31,8 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
     clock: new THREE.Clock(),
     isPlaying: false,
     actions: {
-      play: async buffer => {
+
+      playBuffer: async buffer => {
         await context.suspend();
         source?.disconnect();
         source = context.createBufferSource();
