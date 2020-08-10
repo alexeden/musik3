@@ -8,7 +8,9 @@ import { UploadAudio, } from './UploadAudio';
 export const MusikControls: React.FC = () => {
   const styles = useStyles();
   const audioLoader = useAudioLoaderStore();
+  const canResume = useMusikStore(state => state.canResume);
   const isPlaying = useMusikStore(state => state.isPlaying);
+  const resume = useMusikStore(state => state.actions.resume);
   const [ isLoading, setIsLoading, ] = useState(false);
   const play = useMusikStore(store => store.actions.play);
   const [ selectedSong, setSelectedSong, ] = useState(SONGS[0]);
@@ -40,13 +42,21 @@ export const MusikControls: React.FC = () => {
                 onChange={setSelectedSong}
               />
             </div>
-            <div className={'flex flex-row justify-center'}>
+            <div className={'flex flex-row justify-around'}>
               <button
                 className={styles.playButton}
                 onClick={() => loadAndPlay(selectedSong.path)}
               >
                 Play
               </button>
+              {canResume && (
+                <button
+                  className={styles.playButton}
+                  onClick={resume}
+                >
+                  Resume
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -92,7 +102,7 @@ const useStyles = createUseStyles({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: '50%',
     boxShadow: '0px 0px 0.5rem 1px rgba(255, 255, 255, 0.2)',
-    composes: [ 'text-2xl', 'relative', ],
+    composes: [ 'text-xl', 'relative', ],
     display: 'flex',
     height: '100px',
     justifyContent: 'center',

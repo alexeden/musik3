@@ -3,15 +3,17 @@ import { Canvas, } from 'react-three-fiber';
 import Effects from '../Effects';
 import GeoRing from '../GeoRing';
 import Levels from '../Levels';
-// import { useMusikStore, } from '../../store';
+import { useMusikStore, } from '../../store';
 
-export const MusikCanvas: React.FC = () =>
-// const isPlaying = useMusikStore(state => state.isPlaying);
-// const pause = useMusikStore(store => store.actions.pause);
+export const MusikCanvas: React.FC = () => {
+  const canResume = useMusikStore(state => state.canResume);
+  const isPlaying = useMusikStore(state => state.isPlaying);
+  const resume = useMusikStore(state => state.actions.resume);
+  const { pause, } = useMusikStore(store => store.actions);
 
-  (
+  return (
     <Canvas
-      // onClick={() => isPlaying && pause()}
+      onClick={() => isPlaying && pause() || canResume && resume()}
       camera={{ fov: 70, near: 100, far: 2000, }}
       gl={{ antialias: false, }}
       gl2
@@ -25,3 +27,4 @@ export const MusikCanvas: React.FC = () =>
       <Effects />
     </Canvas>
   );
+};

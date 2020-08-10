@@ -4,11 +4,13 @@ import create from 'zustand';
 export type MusikState = Readonly<{
   analyzer: AnalyserNode;
   audioBuffer: AudioBuffer | null;
+  canResume: boolean;
   clock: THREE.Clock;
   isPlaying: boolean;
   actions: {
-    play: (buffer: AudioBuffer) => Promise<void>;
     pause: () => void;
+    play: (buffer: AudioBuffer) => Promise<void>;
+    resume: () => void;
   };
 }>;
 
@@ -22,12 +24,16 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
   let source: AudioBufferSourceNode | null = null;
 
   context.addEventListener('statechange', () => {
-    set({ isPlaying: context.state === 'running' && !!source?.buffer, });
+    set({
+      canResume: context.state === 'suspended' && !!source?.buffer,
+      isPlaying: context.state === 'running' && !!source?.buffer,
+    });
   });
 
   return {
     analyzer,
     audioBuffer: null,
+    canResume: false,
     clock: new THREE.Clock(),
     isPlaying: false,
     actions: {
@@ -41,6 +47,7 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
         return context.resume();
       },
       pause: () => context.suspend(),
+      resume: () => context.resume(),
     },
   };
 });
