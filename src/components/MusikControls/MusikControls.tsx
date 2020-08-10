@@ -1,6 +1,6 @@
 import React, { useCallback, useState, } from 'react';
 import { createUseStyles, } from 'react-jss';
-import { useAudioLoaderStore, useMusikStore, } from '../../store';
+import { useAudioLoaderStore, useMusikStore, } from '../../hooks';
 import { SONGS, } from './constants';
 import { SelectSong, } from './SelectSong';
 import { UploadAudio, } from './UploadAudio';

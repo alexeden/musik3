@@ -1,11 +1,10 @@
 import React, { useMemo, useRef, } from 'react';
-import { useThree, useFrame, } from 'react-three-fiber';
+import { useFrame, useThree, } from 'react-three-fiber';
 import {
-  Color, Group, Mesh, Geometry, MeshBasicMaterial,
+  Color, Geometry, Group, Mesh, MeshBasicMaterial,
 } from 'three';
-import { useLevelData, useBeat, } from '../../hooks/useMusik';
+import { useBeat, useLevelData, useMusikStore, } from '../../hooks';
 import { MathUtils, SimplexNoise, } from '../../lib';
-import { useMusikStore, } from '../../store';
 
 const SEGMENTS = 10;
 const noise = new SimplexNoise(Math);

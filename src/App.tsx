@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import MusikControls from './components/MusikControls';
 import MusikCanvas from './components/MusikCanvas';
 

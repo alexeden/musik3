@@ -1,9 +1,9 @@
 import React from 'react';
 import { Canvas, } from 'react-three-fiber';
+import { useMusikStore, } from '../../hooks';
 import Effects from '../Effects';
 import GeoRing from '../GeoRing';
 import Levels from '../Levels';
-import { useMusikStore, } from '../../store';
 
 export const MusikCanvas: React.FC = () => {
   const canResume = useMusikStore(state => state.canResume);

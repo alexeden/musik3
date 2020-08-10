@@ -1,11 +1,8 @@
-import * as THREE from 'three';
 import create from 'zustand';
 
 export type MusikState = Readonly<{
   analyzer: AnalyserNode;
-  audioBuffer: AudioBuffer | null;
   canResume: boolean;
-  clock: THREE.Clock;
   isPlaying: boolean;
   actions: {
     pause: () => void;
@@ -32,9 +29,7 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
 
   return {
     analyzer,
-    audioBuffer: null,
     canResume: false,
-    clock: new THREE.Clock(),
     isPlaying: false,
     actions: {
       play: async buffer => {

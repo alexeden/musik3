@@ -1,9 +1,8 @@
 import React, { useMemo, useRef, } from 'react';
-import { Group, Mesh, MeshBasicMaterial, } from 'three';
 import { useFrame, } from 'react-three-fiber';
-import { useLevelData, useBeat, } from '../../hooks/useMusik';
+import { Group, Mesh, MeshBasicMaterial, } from 'three';
+import { useBeat, useLevelData, useMusikStore, } from '../../hooks';
 import { MathUtils, } from '../../lib';
-import { useMusikStore, } from '../../store';
 
 const radiusOut = 600;
 const radiusIn = 0.7 * radiusOut;

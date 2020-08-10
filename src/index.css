@@ -1,10 +1,15 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
 * {
+  @apply text-white;
   box-sizing: border-box;
   position: relative;
   font-family: 'Baumans';
   outline: none !important;
-
 }
+
 *:focus {
   outline: none !important;
 }

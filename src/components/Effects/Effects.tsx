@@ -3,12 +3,11 @@ import {
 } from 'postprocessing';
 import React, { useEffect, useMemo, useRef, } from 'react';
 import { useFrame, useThree, } from 'react-three-fiber';
-import { useBeat, useLevelData, } from '../../hooks/useMusik';
+import { useBeat, useLevelData, useMusikStore, } from '../../hooks';
 import {
   AdditiveBlendShader, BadTvShader, CopyShader, FilmShader, HorizontalBlurShader,
   MirrorShader, RgbShiftShader, VerticalBlurShader,
 } from '../../lib';
-import { useMusikStore, } from '../../store';
 
 export const Effects: React.FC = () => {
   const analyzer = useMusikStore(state => state.analyzer);
