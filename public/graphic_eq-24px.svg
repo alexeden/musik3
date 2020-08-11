@@ -1,17 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" height="22" viewBox="3 3 18 18" width="22">
-<defs>
+<svg xmlns="http://www.w3.org/2000/svg" height="192" width="192" viewBox="1 1 22 22">
+  <defs>
     <linearGradient id="myGradient">
-      <stop offset="0%"  stop-color="red" />
-      <stop offset="20%" stop-color="red" />
+      <stop offset="0%" stop-color="red" />
+      <stop offset="20%" stop-color="orange" />
       <stop offset="21%" stop-color="orange" />
-      <stop offset="40%" stop-color="orange" />
+      <stop offset="40%" stop-color="yellow" />
       <stop offset="41%" stop-color="yellow" />
-      <stop offset="60%" stop-color="yellow" />
-      <stop offset="61%" stop-color="#0F0" />
-      <stop offset="80%" stop-color="#0F0" />
-      <stop offset="81%" stop-color="cyan" />
-      <stop offset="100%" stop-color="cyan" />
+      <stop offset="60%" stop-color="cyan" />
+      <stop offset="61%" stop-color="cyan" />
+      <stop offset="80%" stop-color="blue" />
+      <stop offset="81%" stop-color="blue" />
+      <stop offset="100%" stop-color="violet" />
     </linearGradient>
   </defs>
-    <path fill="url('#myGradient')" d="M7 18h2V6H7v12zm4 4h2V2h-2v20zm-8-8h2v-4H3v4zm12 4h2V6h-2v12zm4-8v4h2v-4h-2z"/>
+  <!-- <rect width="24" height="24" stroke-width="0" fill="#000000" /> -->
+  <path fill="url('#myGradient')" d="M7 18h2V6H7v12zm4 4h2V2h-2v20zm-8-8h2v-4H3v4zm12 4h2V6h-2v12zm4-8v4h2v-4h-2z" />
 </svg>
