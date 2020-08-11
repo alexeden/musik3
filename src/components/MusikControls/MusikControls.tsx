@@ -11,16 +11,23 @@ export const MusikControls: React.FC = () => {
   const audioLoader = useAudioLoaderStore();
   const canResume = useMusikStore(state => state.canResume);
   const isPlaying = useMusikStore(state => state.isPlaying);
-  const { playBuffer, resume, } = useMusikStore(state => state.actions);
+  const { playBuffer, playStream, resume, } = useMusikStore(state => state.actions);
   const [ isLoading, setIsLoading, ] = useState(false);
   const [ selectedSong, setSelectedSong, ] = useState(SONGS[0]);
 
-  const loadAndPlay = useCallback(async (url: string) => {
+  const loadBufferAndPlay = useCallback(async (url: string) => {
     setIsLoading(true);
     const buffer = await audioLoader.fetchAudioBuffer(url);
     await playBuffer(buffer);
     setIsLoading(false);
   }, [ audioLoader, playBuffer, ]);
+
+  const createAndPlayStream = useCallback(async () => {
+    setIsLoading(true);
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false, });
+    await playStream(stream);
+    setIsLoading(false);
+  }, [ playStream, ]);
 
   return (
     <div className={'fixed flex flex-row inset-0 z-10 items-center justify-center pointer-events-none'}>
@@ -32,7 +39,10 @@ export const MusikControls: React.FC = () => {
               <SelectSong onChange={song => setSelectedSong(song)} value={selectedSong} />
             </div>
             <div className={'flex flex-row justify-around'}>
-              <button className={styles.playButton} onClick={() => loadAndPlay(selectedSong.path)}>
+              <button
+                className={styles.playButton}
+                onClick={() => loadBufferAndPlay(selectedSong.path)}
+              >
                 Play
               </button>
               {canResume && (
@@ -42,7 +52,7 @@ export const MusikControls: React.FC = () => {
               )}
             </div>
             <div className={'flex flex-row justify-around'}>
-              <button className={styles.useMicButton}>
+              <button className={styles.useMicButton} onClick={createAndPlayStream}>
                 Use Microphone
               </button>
             </div>

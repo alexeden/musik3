@@ -45,6 +45,8 @@ rules:
     - error
     - "as-needed"
 
+  no-void: 0
+
   no-plusplus: 0
   radix: 0
   no-bitwise: 0

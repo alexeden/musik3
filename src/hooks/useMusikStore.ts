@@ -7,7 +7,7 @@ export type MusikState = Readonly<{
   actions: {
     pause: () => void;
     playBuffer: (buffer: AudioBuffer) => Promise<void>;
-    playStream: (buffer: AudioBuffer) => Promise<void>;
+    playStream: (stream: MediaStream) => Promise<void>;
     resume: () => void;
   };
 }>;
@@ -19,12 +19,21 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
   analyzer.fftSize = 1024;
   analyzer.connect(context.destination);
 
-  let source: AudioBufferSourceNode | null = null;
+  let source: AudioBufferSourceNode | MediaStreamAudioSourceNode | null = null;
+
+  const stopSource = () => {
+    source?.disconnect();
+
+    if (source instanceof MediaStreamAudioSourceNode) {
+      source.mediaStream.getTracks().map(track => track.stop());
+    }
+  };
 
   context.addEventListener('statechange', () => {
+    const isBufferSource = source instanceof AudioBufferSourceNode;
     set({
-      canResume: context.state === 'suspended' && !!source?.buffer,
-      isPlaying: context.state === 'running' && !!source?.buffer,
+      canResume: context.state === 'suspended' && !!(source as AudioBufferSourceNode | null)?.buffer,
+      isPlaying: context.state === 'running' && !!source && (isBufferSource ? !!(source as any).buffer : true),
     });
   });
 
@@ -36,15 +45,22 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
       pause: () => context.suspend(),
       playBuffer: async buffer => {
         await context.suspend();
-        source?.disconnect();
+        stopSource();
         source = context.createBufferSource();
         source.buffer = buffer;
-        source.connect(analyzer);
+        source.connect(analyzer).addEventListener('ended', () => {
+          source = null;
+          void context.suspend();
+        });
         source.start();
         return context.resume();
       },
-      playStream: async () => {
-
+      playStream: async stream => {
+        await context.suspend();
+        stopSource();
+        source = context.createMediaStreamSource(stream);
+        source.connect(analyzer);
+        return context.resume();
       },
       resume: () => context.resume(),
     },
