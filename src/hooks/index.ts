@@ -4,3 +4,4 @@ export { useBeat, } from './useBeat';
 export { useByteData, } from './useByteData';
 export { useLevelData, } from './useLevelData';
 export { useMusikStore, } from './useMusikStore';
+export { useWindowSize, useWindowHeight, useWindowWidth, } from './useWindowSize';
