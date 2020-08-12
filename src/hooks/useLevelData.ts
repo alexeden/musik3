@@ -3,7 +3,7 @@ import { useByteData, } from './useByteData';
 
 const GAIN = 1.7;
 
-export const LEVELS_COUNT = 32;
+export const LEVELS_COUNT = 24;
 
 export interface LevelData {
   levels: number[];
@@ -14,12 +14,11 @@ export interface LevelData {
 }
 
 export const useLevelData = (analyzer: AnalyserNode, cb: (data: LevelData) => void) => {
-  const { freq, } = useByteData(analyzer);
   /** 32 bins per level for 16 levels, 512 bins */
   const binsPerLevel = Math.floor(analyzer.frequencyBinCount / LEVELS_COUNT);
 
-  useAnimationFrame(() => {
-    if (analyzer.context.state === 'suspended') return;
+  useByteData(analyzer, ({ freq, }) => {
+    // if (analyzer.context.state === 'suspended') return;
 
     const data: number[] = [];
 
