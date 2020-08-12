@@ -3,7 +3,7 @@ import { useByteData, } from './useByteData';
 
 const GAIN = 1.7;
 
-const LEVELS_COUNT = 16;
+export const LEVELS_COUNT = 32;
 
 export interface LevelData {
   levels: number[];
