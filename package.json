@@ -13,13 +13,14 @@
     "postversion": "git tag $(npm run tag-app --silent)"
   },
   "dependencies": {
+    "drei": "0.0.72",
     "jss": "^10.3.0",
     "postprocessing": "github:alexeden/postprocessing#20953c5f2941e6fef5656a8d20367f8a846447dd",
     "react": "^16.13.1",
     "react-app-polyfill": "^1.0.6",
     "react-dom": "^16.13.1",
     "react-jss": "^10.3.0",
-    "react-three-fiber": "^4.2.18",
+    "react-three-fiber": "^4.2.20",
     "tailwindcss": "^1.6.2",
     "three": "^0.119.1",
     "zustand": "^2.2.3"
