@@ -1,10 +1,12 @@
 import React from 'react';
-import MusikControls from './components/MusikControls';
 import MusikCanvas from './components/MusikCanvas';
+import MusikControls from './components/MusikControls';
+import Waveform from './components/Waveform';
 
 export const App: React.FC = () => (
   <>
     <MusikControls />
     <MusikCanvas />
+    <Waveform />
   </>
 );
