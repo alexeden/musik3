@@ -1,16 +1,17 @@
-import React, { useRef, } from 'react';
-import { useThree, } from 'react-three-fiber';
+import React, { useRef, useDebugValue, } from 'react';
+import { useWindowWidth, } from '../../hooks';
 
 const Waveform: React.FC = () => {
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const rectRef = useRef(document.body.getBoundingClientRect());
+  const width = useDebugValue(useWindowWidth());
   // const { size, } = useThree();
   // console.log('size: ', size);
   return (
     <canvas
       // height={`${size?.height ?? 100}px`}
       height="144px"
-      width={`${rectRef.current.width}px`}
+      width={`${width}px`}
       ref={canvas => {
         if (!canvas) return;
         ctxRef.current = canvas.getContext('2d');
