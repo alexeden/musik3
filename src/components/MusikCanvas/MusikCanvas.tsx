@@ -4,6 +4,7 @@ import { useMusikStore, } from '../../hooks';
 import Effects from '../Effects';
 import GeoRing from '../GeoRing';
 import Levels from '../Levels';
+import { LEVELS_COUNT, } from '../../hooks/useLevelData';
 
 export const MusikCanvas: React.FC = () => {
   const canResume = useMusikStore(state => state.canResume);
@@ -23,7 +24,7 @@ export const MusikCanvas: React.FC = () => {
       }}
     >
       <GeoRing />
-      <Levels count={16} />
+      <Levels count={LEVELS_COUNT} />
       <Effects />
     </Canvas>
   );
