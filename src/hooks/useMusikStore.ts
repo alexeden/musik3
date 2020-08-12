@@ -16,7 +16,7 @@ export const [ useMusikStore, musikApi, ] = create<MusikState>((set, get, _api) 
   const context = new AudioContext();
   const analyzer = context.createAnalyser();
   analyzer.smoothingTimeConstant = 0.1;
-  analyzer.fftSize = 1024;
+  analyzer.fftSize = 2048;
   analyzer.connect(context.destination);
 
   let source: AudioBufferSourceNode | MediaStreamAudioSourceNode | null = null;

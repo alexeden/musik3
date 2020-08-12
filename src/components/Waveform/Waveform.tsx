@@ -1,28 +1,36 @@
 import React, { useRef, } from 'react';
-import { useWindowWidth, useLevelData, useMusikStore, } from '../../hooks';
+import {
+  useWindowWidth, useLevelData, useMusikStore, useAnimationFrame, useByteData,
+} from '../../hooks';
+import { LevelData, } from '../../hooks/useLevelData';
 
 const Waveform: React.FC = () => {
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const analyzer = useMusikStore(state => state.analyzer);
   const width = useWindowWidth();
   const height = 144;
+  const fullVolumeHeight = height;
 
-  useLevelData(analyzer, ({ levels, volume, }) => {
+  useByteData(analyzer, ({ freq, }) => {
     if (!ctxRef.current) return;
     const ctx = ctxRef.current;
+    const levels = [ ...freq.values(), ].slice(0, 100).map(l => l / 256);
 
-    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.fillRect(0, 0, width, height);
     ctx.lineWidth = 2;
-    ctx.strokeStyle = 'rgb(255, 255, 255)';
-    const levelWidth = Math.floor(width / levels.length);
+    const levelWidth = Math.ceil(width / levels.length);
 
     levels.forEach((level, i) => {
-      const y = height - (level * height);
+      ctx.beginPath();
+      ctx.strokeStyle = level >= 1
+        ? 'rgb(255, 0, 0)'
+        : 'rgb(255, 255, 255)';
+      const y = height - (level * fullVolumeHeight);
       ctx.moveTo(levelWidth * i, y);
       ctx.lineTo(levelWidth * (i + 1), y);
+      ctx.stroke();
     });
-
-    ctx.stroke();
   });
 
   return (
