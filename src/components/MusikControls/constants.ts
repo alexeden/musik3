@@ -2,6 +2,11 @@ import { Song, } from './types';
 
 export const SONGS: Song[] = [
   {
+    artist: 'London Grammar',
+    name: 'Lose your Head - Dave Glass Animals Remix',
+    path: '/lose-your-head.mp3',
+  },
+  {
     artist: 'Lady Gaga ft. Elton John',
     name: 'Sine from Above',
     path: '/sine-from-above.mp3',
@@ -18,7 +23,7 @@ export const SONGS: Song[] = [
   },
   {
     artist: 'Clean Bandit',
-    name: 'Mozart\'s House',
+    name: "Mozart's House",
     path: '/mozarts-house.mp3',
   },
   {
