@@ -1,8 +1,5 @@
 import React, { useRef, } from 'react';
-import {
-  useWindowWidth, useLevelData, useMusikStore, useAnimationFrame, useByteData,
-} from '../../hooks';
-import { LevelData, } from '../../hooks/useLevelData';
+import { useByteData, useMusikStore, useWindowWidth, } from '../../hooks';
 
 const Waveform: React.FC = () => {
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);

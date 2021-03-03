@@ -1,4 +1,3 @@
-import { useAnimationFrame, } from './useAnimationFrame';
 import { useByteData, } from './useByteData';
 
 const GAIN = 1.7;
