@@ -2,6 +2,11 @@ import { Song, } from './types';
 
 export const SONGS: Song[] = [
   {
+    artist: 'Smoke City',
+    name: 'Underwater Love',
+    path: '/underwater-love.mp3',
+  },
+  {
     artist: 'London Grammar',
     name: 'Lose your Head - Dave Glass Animals Remix',
     path: '/lose-your-head.mp3',
